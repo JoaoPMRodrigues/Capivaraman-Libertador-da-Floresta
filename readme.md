@@ -164,3 +164,13 @@ python main.py
 git clone <url>
 cd projeto
 python main.py
+```
+
+## 👤 Autores
+
+João Paulo Medeiros Rodrigues  
+Eddie Belarmino Salles de Moraes
+
+- Universidade Federal Fluminense (UFF)  
+- Curso: (coloca seu curso aqui)  
+- Disciplina: Introdução à Programação de Jogos  
