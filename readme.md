@@ -5,7 +5,15 @@
 **CAPIVARAMAN: Libertador da Floresta** é um jogo 2D de ação e aventura inspirado no folclore brasileiro.  
 O jogador controla um herói capivara que precisa salvar a Amazônia de uma corrupção Causada pelo Corpo Seco.
 
-> 🎯 Projeto desenvolvido para a disciplina de Laboratório de Jogos (UFF)
+
+## 👤 Autores
+
+João Paulo Medeiros Rodrigues  
+Eddie Belarmino Salles de Moraes
+
+- Universidade Federal Fluminense (UFF)  
+- Curso: Ciência da Computação
+- Projeto desenvolvido para a disciplina de Laboratório de Jogos (UFF)
 
 ---
 
@@ -166,11 +174,5 @@ cd projeto
 python main.py
 ```
 
-## 👤 Autores
 
-João Paulo Medeiros Rodrigues  
-Eddie Belarmino Salles de Moraes
 
-- Universidade Federal Fluminense (UFF)  
-- Curso: (coloca seu curso aqui)  
-- Disciplina: Introdução à Programação de Jogos  
