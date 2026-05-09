@@ -7,8 +7,8 @@ from time import sleep
 from rich.traceback import install
 install()
 
-x = 1536
-y = 1024
+x = 1500
+y = 1000
 window = Window(x, y)
 window.set_title("Capivaraman - O Libertador da Floresta")
 
