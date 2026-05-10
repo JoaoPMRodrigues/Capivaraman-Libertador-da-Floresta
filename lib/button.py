@@ -7,11 +7,24 @@ class Button(Entity):
     def __init__(self, imagem, window, x, y):
         super().__init__(imagem, window, x, y)
 
+        self.was_pressed = False
+
     def clicked(self, window):
         mouse = window.mouse
-        return mouse.is_over_object(self.sprite) and mouse.button_pressed(1)
+
+        hovering = mouse.is_over_object(self.sprite)
+        pressed = mouse.button_pressed(1)
+
+        # Detecta clique único
+        if hovering and pressed and not self.was_pressed:
+            self.was_pressed = True
+            return True
+
+        # Reset quando soltar botão
+        if not pressed:
+            self.was_pressed = False
+
+        return False
 
     def update(self, window):
-        if self.clicked(window):
-            return True
-        return False
+        return self.clicked(window)
