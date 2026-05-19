@@ -53,6 +53,7 @@ while True:
             tela = "menu"
 
     if tela == "options":
+        
         easy.draw()
         normal.draw()
         hard.draw()
