@@ -39,13 +39,13 @@ while True:
         options.draw()
         exit.draw()
         if start.clicked(window):
-            sleep(dt)
+            sleep(0.2)
             tela = "game"
         elif options.clicked(window):
-            sleep(dt)
+            sleep(0.2)
             tela = "options"
         elif exit.clicked(window):
-            sleep(dt)
+            sleep(0.2)
             break
 
     if tela == "game":
@@ -58,13 +58,13 @@ while True:
         hard.draw()
 
         if easy.clicked(window):
-            sleep(dt)
+            sleep(0.2)
             tela = "menu"
         if normal.clicked(window):
-            sleep(dt)
+            sleep(0.2)
             tela = "menu"
         if hard.clicked(window):
-            sleep(dt)
+            sleep(0.2)
             tela = "menu"
 
         if keyboard.key_pressed("ESC"):
