@@ -4,6 +4,7 @@ from pplay.keyboard import *
 from pplay.mouse import *
 from lib.button import *
 from lib.game import *
+from lib.player import *
 from rich.traceback import install
 install()
 
@@ -26,6 +27,10 @@ tela = "menu"
 easy = Button("sprites/button/easy.png", window, 575, 200)
 normal = Button("sprites/button/normal.png", window, 575, 400)
 hard = Button("sprites/button/hard.png", window, 575, 600)
+
+# Criando o player
+
+player = Player(window)
 
 keyboard = Keyboard()
 cooldown = 0.3
@@ -50,6 +55,14 @@ while True:
 
     if tela == "game":
         background.draw()
+
+        player.update(
+            window,
+            keyboard,
+            dt
+        )
+
+        player.draw()
         if keyboard.key_pressed("ESC"):
             background = Sprite("sprites/wallpaper/start.png", 1)
             tela = "menu"

@@ -9,7 +9,7 @@ class Player(Entity):
     def __init__(self, window):
 
         super().__init__(
-            "sprites/player/idle/idle_01.png",
+            "sprites/player/idle/idled1.png",
             window,
             700,
             500
