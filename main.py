@@ -3,7 +3,7 @@ from pplay.sprite import *
 from pplay.keyboard import *
 from pplay.mouse import *
 from lib.button import *
-from time import sleep
+from lib.game import *
 from rich.traceback import install
 install()
 
@@ -28,6 +28,8 @@ normal = Button("sprites/button/normal.png", window, 575, 400)
 hard = Button("sprites/button/hard.png", window, 575, 600)
 
 keyboard = Keyboard()
+cooldown = 0.3
+fps = 0
 
 while True:
     window.set_background_color((0, 0, 0))
@@ -35,40 +37,39 @@ while True:
     dt = window.delta_time()
 
     if tela == "menu":
+        background = Sprite("sprites/wallpaper/start.png", 1)
+        background.draw()
         start.draw()
         options.draw()
         exit.draw()
         if start.clicked(window):
-            sleep(0.2)
             tela = "game"
         elif options.clicked(window):
-            sleep(0.2)
             tela = "options"
         elif exit.clicked(window):
-            sleep(0.2)
             break
 
     if tela == "game":
+        background = Sprite("sprites/wallpaper/level/lvl1.png")
+        background.draw()
         if keyboard.key_pressed("ESC"):
             tela = "menu"
 
     if tela == "options":
-        
+
         easy.draw()
         normal.draw()
         hard.draw()
 
         if easy.clicked(window):
-            sleep(0.2)
             tela = "menu"
         if normal.clicked(window):
-            sleep(0.2)
             tela = "menu"
         if hard.clicked(window):
-            sleep(0.2)
             tela = "menu"
 
         if keyboard.key_pressed("ESC"):
             tela = "menu"
 
+    cooldown, fps = show_fps(window, cooldown, dt, fps)
     window.update()

@@ -1,7 +1,8 @@
 from pplay.sprite import *
+from abc import ABC, abstractmethod
 
 
-class Entity:
+class Entity(ABC):
     def __init__(self, path, window, x=None, y=None):
         self.sprite = Sprite(path)
         self.sprite.x = x
@@ -13,3 +14,6 @@ class Entity:
 
     def draw(self):
         self.sprite.draw()
+
+    def update(self):
+        pass
