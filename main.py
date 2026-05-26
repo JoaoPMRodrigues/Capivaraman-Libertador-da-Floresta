@@ -37,12 +37,11 @@ while True:
     dt = window.delta_time()
 
     if tela == "menu":
-        background = Sprite("sprites/wallpaper/start.png", 1)
-        background.draw()
         start.draw()
         options.draw()
         exit.draw()
         if start.clicked(window):
+            background = Sprite("sprites/wallpaper/level/lvl1.png")
             tela = "game"
         elif options.clicked(window):
             tela = "options"
@@ -50,9 +49,9 @@ while True:
             break
 
     if tela == "game":
-        background = Sprite("sprites/wallpaper/level/lvl1.png")
         background.draw()
         if keyboard.key_pressed("ESC"):
+            background = Sprite("sprites/wallpaper/start.png", 1)
             tela = "menu"
 
     if tela == "options":
@@ -69,6 +68,7 @@ while True:
             tela = "menu"
 
         if keyboard.key_pressed("ESC"):
+            background = Sprite("sprites/wallpaper/start.png", 1)
             tela = "menu"
 
     cooldown, fps = show_fps(window, cooldown, dt, fps)

@@ -1,34 +1,46 @@
-from pplay.sprite import *
+# lib/player.py
+
 from pplay.keyboard import *
 from lib.entity import *
 
 
 class Player(Entity):
-    def __init__(self, path, window, x, y, speed):
-        super().__init__(path, window, x, y)
-        self.speed = speed
-        self.cooldown = 0.5
-        self.base = 0.5
-        self.timer = 0
 
-    def new_speed(self, speed):
-        self.speed = speed
+    def __init__(self, window):
 
-    def recarga(self, dificuldade):
-        self.cooldown = self.base * dificuldade
+        super().__init__(
+            "sprites/player/idle/idle_01.png",
+            window,
+            700,
+            500
+        )
+
+        self.speed = 500
 
     def update(self, window, keyboard, dt):
-        # Movimento
 
-        if self.timer > 0:
-            self.timer -= dt/50
+        if keyboard.key_pressed("A"):
+            self.sprite.x -= self.speed * dt
 
-        if keyboard.key_pressed("LEFT"):
-            self.sprite.x -= self.speed*dt
-        if keyboard.key_pressed("RIGHT"):
-            self.sprite.x += self.speed*dt
-        # Colisão paredes
+        if keyboard.key_pressed("D"):
+            self.sprite.x += self.speed * dt
+
+        if keyboard.key_pressed("W"):
+            self.sprite.y -= self.speed * dt
+
+        if keyboard.key_pressed("S"):
+            self.sprite.y += self.speed * dt
+
+        # Limites da tela
+
         if self.sprite.x < 0:
             self.sprite.x = 0
+
+        if self.sprite.y < 0:
+            self.sprite.y = 0
+
         if self.sprite.x + self.sprite.width > window.width:
             self.sprite.x = window.width - self.sprite.width
+
+        if self.sprite.y + self.sprite.height > window.height:
+            self.sprite.y = window.height - self.sprite.height
