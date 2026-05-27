@@ -6,6 +6,7 @@ from lib.button import *
 from lib.game import *
 from lib.player import *
 from rich.traceback import install
+from time import sleep
 install()
 
 x = 1500
@@ -49,6 +50,7 @@ while True:
             background = Sprite("sprites/wallpaper/level/lvl1.png")
             tela = "game"
         elif options.clicked(window):
+            sleep(0.2)
             tela = "options"
         elif exit.clicked(window):
             break

@@ -19,16 +19,16 @@ class Player(Entity):
 
     def update(self, window, keyboard, dt):
 
-        if keyboard.key_pressed("A"):
+        if keyboard.key_pressed("A") or keyboard.key_pressed("LEFT"):
             self.sprite.x -= self.speed * dt
 
-        if keyboard.key_pressed("D"):
+        if keyboard.key_pressed("D") or keyboard.key_pressed("RIGHT"):
             self.sprite.x += self.speed * dt
 
-        if keyboard.key_pressed("W"):
+        if keyboard.key_pressed("W") or keyboard.key_pressed("UP"):
             self.sprite.y -= self.speed * dt
 
-        if keyboard.key_pressed("S"):
+        if keyboard.key_pressed("S") or keyboard.key_pressed("DOWN"):
             self.sprite.y += self.speed * dt
 
         # Limites da tela
