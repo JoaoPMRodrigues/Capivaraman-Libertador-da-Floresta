@@ -50,7 +50,6 @@ while True:
             background = Sprite("sprites/wallpaper/level/lvl1.png")
             tela = "game"
         elif options.clicked(window):
-            sleep(0.2)
             tela = "options"
         elif exit.clicked(window):
             break
