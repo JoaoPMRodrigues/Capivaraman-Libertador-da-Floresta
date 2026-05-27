@@ -39,8 +39,8 @@ class Player(Entity):
 
         self.bullets = []
 
-        self.shoot_timer = 0.2
-        self.shoot_cooldown = 0.2
+        self.shoot_timer = 0.3
+        self.shoot_cooldown = 0.3
 
     def animate(self, dt):
 
