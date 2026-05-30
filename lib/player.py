@@ -171,7 +171,7 @@ class Player(Entity):
 
         self.shoot_timer -= dt
 
-        if (keyboard.key_pressed("SPACE") and self.shoot_timer <= 0):
+        if (keyboard.key_pressed("SPACE") and self.shoot_timer <= 0 or keyboard.key_pressed("Z") and self.shoot_timer <= 0):
 
             bullet = Bullet(
                 window,
