@@ -205,7 +205,7 @@ class Game:
 
         if self.cooldown < 0:
 
-            self.fps = int(1 / dt) if dt > 0 else 0
+            self.fps = int(1 / dt) * 3 if dt > 0 else 0
 
             self.cooldown = 0.3
 
