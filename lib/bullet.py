@@ -15,7 +15,7 @@ class Bullet(Entity):
         self.speed = 1000
 
     def update(self, dt):
-        if self.direction == "right":
+        if self.direction in ["right", "up", "down"]:
             self.sprite.x += self.speed * dt
         else:
             self.sprite.x -= self.speed * dt

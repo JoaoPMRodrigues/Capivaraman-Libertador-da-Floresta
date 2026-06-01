@@ -3,6 +3,7 @@ from lib.bullet import *
 
 from pplay.keyboard import *
 from pplay.sprite import *
+from pplay.collision import *
 
 from os import listdir
 
@@ -58,6 +59,20 @@ class Player(Entity):
             )
         ]
 
+        self.walk_up_frames = [
+            Sprite(f"sprites/player/walk_up/{img}")
+            for img in sorted(
+                listdir("sprites/player/walk_up")
+            )
+        ]
+
+        self.walk_down_frames = [
+            Sprite(f"sprites/player/walk_down/{img}")
+            for img in sorted(
+                listdir("sprites/player/walk_down")
+            )
+        ]
+
         self.current_animation = (
             self.idle_right_frames
         )
@@ -98,7 +113,7 @@ class Player(Entity):
             self.sprite.y = old_y
 
     def update(self, window, keyboard, dt):
-
+        limite = Sprite("sprites/wallpaper/level/limite.png")
         moving = False
 
         if keyboard.key_pressed("A") or keyboard.key_pressed("LEFT"):
@@ -125,9 +140,11 @@ class Player(Entity):
                     window.width - self.sprite.width
                 )
 
-        if keyboard.key_pressed("W") or keyboard.key_pressed("UP"):
+        if (keyboard.key_pressed("W") or keyboard.key_pressed("UP")) and not Collision.collided(self.sprite, limite):
 
             self.sprite.y -= self.speed * dt
+
+            self.direction = "up"
 
             moving = True
 
@@ -137,6 +154,8 @@ class Player(Entity):
         if keyboard.key_pressed("S") or keyboard.key_pressed("DOWN"):
 
             self.sprite.y += self.speed * dt
+
+            self.direction = "down"
 
             moving = True
 
@@ -150,6 +169,28 @@ class Player(Entity):
             if moving:
                 self.current_animation = (
                     self.walk_right_frames
+                )
+            else:
+                self.current_animation = (
+                    self.idle_right_frames
+                )
+        
+        elif self.direction == "up":
+
+            if moving:
+                self.current_animation = (
+                    self.walk_up_frames
+                )
+            else:
+                self.current_animation = (
+                    self.idle_right_frames
+                )
+        
+        elif self.direction == "down":
+
+            if moving:
+                self.current_animation = (
+                    self.walk_down_frames
                 )
             else:
                 self.current_animation = (
