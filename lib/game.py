@@ -1,8 +1,9 @@
 from pplay.sprite import *
 from pplay.keyboard import *
-
+from pplay.window import *
 from lib.button import *
 from lib.player import *
+from lib.saci import *
 
 
 class Game:
@@ -87,6 +88,7 @@ class Game:
         self.cooldown = 0.3
         self.fps = 0
 
+        self.saci = Saci(window)
     # ====================================
     # UPDATE PRINCIPAL
     # ====================================
@@ -121,9 +123,14 @@ class Game:
         elif self.state == "game":
 
             self.game_bg.draw()
-
+            self.show_life()
             self.player.draw()
 
+            self.saci.draw()
+
+            self.saci.draw_hp_bar(
+                self.window
+            )
         elif self.state == "options":
 
             self.menu_bg.draw()
@@ -161,6 +168,10 @@ class Game:
             dt
         )
 
+        self.saci.update(dt, self.player)
+
+        if self.player.life <= 0:
+            self.state = "menu"
         if self.keyboard.key_pressed("ESC"):
             self.state = "menu"
 
@@ -205,3 +216,16 @@ class Game:
             size=25,
             color=(255, 255, 255)
         )
+
+    def show_life(self):
+        life = ""
+        for _ in range(self.player.life):
+            life += "❤️"
+        for _ in range(3-self.player.life):
+            life += "💔"
+        self.window.draw_text(life,
+                              10,
+                              40,
+                              size=20,
+                              color=(255, 255, 255)
+                              )
