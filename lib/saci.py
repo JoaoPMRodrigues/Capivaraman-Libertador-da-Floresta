@@ -252,7 +252,7 @@ class Saci(Boss):
                 bullet.sprite
             ):
 
-                self.take_damage(10)
+                self.take_damage(1)
 
                 self.hit_timer = self.hit_duration
 
@@ -263,6 +263,7 @@ class Saci(Boss):
     def take_damage(self, damage):
 
         if self.dead:
+            self.tornados.clear()
             return
 
         self.hp -= damage
