@@ -81,6 +81,7 @@ class Saci(Boss):
             )
         ]
 
+        self.dead = False
         self.frame = 0
 
         self.animation_timer = 0
@@ -119,8 +120,21 @@ class Saci(Boss):
 
             self.frame += 1
 
-            if self.frame >= len(self.current_animation):
-                self.frame = 0
+            if self.state == "death":
+
+                if self.frame >= len(self.current_animation):
+
+                    self.frame = len(
+                        self.current_animation
+                    ) - 1
+
+            else:
+
+                if self.frame >= len(
+                    self.current_animation
+                ):
+
+                    self.frame = 0
 
             old_x = self.sprite.x
             old_y = self.sprite.y
@@ -176,6 +190,9 @@ class Saci(Boss):
 
     def dash(self):
 
+        if self.current_position != 1:
+            return
+
         self.dashing = True
 
         self.state = "dash"
@@ -185,19 +202,47 @@ class Saci(Boss):
         if not self.dashing:
             return
 
-        self.sprite.x -= self.dash_speed * dt
+        if self.current_position == 1:
 
-        if self.sprite.collided(player.sprite):
+            self.sprite.x -= (
+                self.dash_speed * dt
+            )
+
+            if self.sprite.x <= 250:
+
+                self.sprite.x = 250
+
+                self.current_position = 2
+
+                self.direction = "right"
+
+                self.dashing = False
+
+                self.state = "idle"
+
+        elif self.current_position == 2:
+
+            self.sprite.x += (
+                self.dash_speed * dt
+            )
+
+            if self.sprite.x >= 1150:
+
+                self.sprite.x = 1150
+
+                self.current_position = 0
+
+                self.direction = "left"
+
+                self.dashing = False
+
+                self.state = "idle"
+
+        if self.sprite.collided(
+            player.sprite
+        ):
 
             player.take_damage(1)
-
-        if self.sprite.x <= 250:
-
-            self.sprite.x = 250
-
-            self.dashing = False
-
-            self.state = "idle"
 
     def check_bullets(self, player):
 
@@ -207,13 +252,34 @@ class Saci(Boss):
                 bullet.sprite
             ):
 
-                self.take_damage(1)
+                self.take_damage(10)
 
                 self.hit_timer = self.hit_duration
 
                 player.bullets.remove(
                     bullet
                 )
+
+    def take_damage(self, damage):
+
+        if self.dead:
+            return
+
+        self.hp -= damage
+
+        if self.hp <= 0:
+
+            self.hp = 0
+
+            self.dead = True
+
+            self.state = "death"
+
+            self.frame = 0
+
+            self.current_animation = (
+                self.death_frames
+            )
 
     def update(self, dt, player):
 
@@ -239,11 +305,12 @@ class Saci(Boss):
 
             if (
                 not self.dashing
+                and self.current_position in [1, 2]
                 and randint(0, 400) == 0
             ):
                 self.dash()
 
-        # -----------------------
+       # -----------------------
 
         if (
             self.teleport_timer

@@ -148,6 +148,7 @@ class Game:
     def update_menu(self):
 
         if self.start.clicked(self.window):
+            self.reset_game()
             self.state = "game"
 
         elif self.options.clicked(self.window):
@@ -170,7 +171,11 @@ class Game:
 
         self.saci.update(dt, self.player)
 
+        if self.player.dead:
+            if self.player.death_timer <= 0:
+                self.state = "menu"
         if self.player.life <= 0:
+            self.reset_game()
             self.state = "menu"
         if self.keyboard.key_pressed("ESC"):
             self.state = "menu"
@@ -205,7 +210,7 @@ class Game:
 
         if self.cooldown < 0:
 
-            self.fps = int(1 / dt) * 3 if dt > 0 else 0
+            self.fps = int(1 / dt) if dt > 0 else 0
 
             self.cooldown = 0.3
 
@@ -229,3 +234,9 @@ class Game:
                               size=20,
                               color=(255, 255, 255)
                               )
+
+    def reset_game(self):
+
+        self.player = Player(self.window)
+
+        self.saci = Saci(self.window)

@@ -151,6 +151,13 @@ class Player(Entity):
             )
             if img.endswith(".png")
         ]
+        self.death_frames = [
+            Sprite(f"sprites/player/death/{img}")
+            for img in sorted(
+                listdir("sprites/player/death")
+            )
+            if img.endswith(".png")
+        ]
 
         self.current_animation = (
             self.idle_right_frames
@@ -161,6 +168,9 @@ class Player(Entity):
         self.animation_timer = 0
 
         self.animation_speed = 0.12
+
+        self.dead = False
+        self.death_timer = 0
 
     # ====================================
     # ANIMAÇÃO
@@ -176,10 +186,21 @@ class Player(Entity):
 
             self.frame += 1
 
-            if self.frame >= len(
-                self.current_animation
-            ):
-                self.frame = 0
+            if self.dead:
+
+                if self.frame >= len(self.current_animation):
+
+                    self.frame = len(
+                        self.current_animation
+                    ) - 1
+
+            else:
+
+                if self.frame >= len(
+                    self.current_animation
+                ):
+
+                    self.frame = 0
 
             old_x = self.sprite.x
             old_y = self.sprite.y
@@ -199,7 +220,7 @@ class Player(Entity):
 
     def take_damage(self, damage):
 
-        if self.invulnerable:
+        if self.invulnerable or self.dead:
             return
 
         self.life -= damage
@@ -214,6 +235,19 @@ class Player(Entity):
             self.hit_duration
         )
 
+        if self.life <= 0:
+
+            self.life = 0
+
+            self.dead = True
+
+            self.death_timer = 2
+
+            self.frame = 0
+
+            self.current_animation = (
+                self.death_frames
+            )
     # ====================================
     # TIROS
     # ====================================
@@ -247,6 +281,11 @@ class Player(Entity):
         dt
     ):
 
+        if self.dead:
+            self.death_timer -= dt
+            self.current_animation = (self.death_frames)
+            self.animate(dt)
+            return
         moving = False
 
         # --------------------
