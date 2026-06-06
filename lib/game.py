@@ -29,51 +29,27 @@ class Game:
         # MENU BUTTONS
         # =====================
 
-        self.start = Button(
-            "sprites/button/start.png",
-            window,
-            575,
-            200
-        )
+        self.start = Button("sprites/button/start.png",
+                            window, 575, 200)
 
-        self.options = Button(
-            "sprites/button/options.png",
-            window,
-            575,
-            400
-        )
+        self.options = Button("sprites/button/options.png",
+                              window, 575, 400)
 
-        self.exit = Button(
-            "sprites/button/exit.png",
-            window,
-            575,
-            600
-        )
+        self.exit = Button("sprites/button/exit.png",
+                           window, 575, 600)
 
         # =====================
         # OPTIONS BUTTONS
         # =====================
 
-        self.easy = Button(
-            "sprites/button/easy.png",
-            window,
-            575,
-            200
-        )
+        self.easy = Button("sprites/button/easy.png",
+                           window, 575, 200)
 
-        self.normal = Button(
-            "sprites/button/normal.png",
-            window,
-            575,
-            400
-        )
+        self.normal = Button("sprites/button/normal.png",
+                             window, 575, 400)
 
-        self.hard = Button(
-            "sprites/button/hard.png",
-            window,
-            575,
-            600
-        )
+        self.hard = Button("sprites/button/hard.png",
+                           window, 575, 600)
 
         # =====================
         # PLAYER
@@ -89,6 +65,8 @@ class Game:
         self.fps = 0
 
         self.saci = Saci(window)
+
+        self.victory_timer = 3
     # ====================================
     # UPDATE PRINCIPAL
     # ====================================
@@ -110,8 +88,6 @@ class Game:
 
     def draw(self):
 
-        self.window.set_background_color((0, 0, 0))
-
         if self.state == "menu":
 
             self.menu_bg.draw()
@@ -127,19 +103,14 @@ class Game:
             self.player.draw()
 
             self.saci.draw()
+            self.show_fps()
 
-            self.saci.draw_hp_bar(
-                self.window
-            )
         elif self.state == "options":
 
             self.menu_bg.draw()
-
             self.easy.draw()
             self.normal.draw()
             self.hard.draw()
-
-        self.show_fps()
 
     # ====================================
     # MENU
@@ -148,7 +119,7 @@ class Game:
     def update_menu(self):
 
         if self.start.clicked(self.window):
-            self.reset_game()
+            self.start_game()
             self.state = "game"
 
         elif self.options.clicked(self.window):
@@ -163,23 +134,24 @@ class Game:
 
     def update_game(self, dt):
 
-        self.player.update(
-            self.window,
-            self.keyboard,
-            dt
-        )
+        self.player.update(self.keyboard, dt)
 
         self.saci.update(dt, self.player)
 
-        if self.player.dead:
-            if self.player.death_timer <= 0:
-                self.state = "menu"
+        self.victory_timer -= dt
+
         if self.player.life <= 0:
-            self.reset_game()
-            self.state = "menu"
-        if self.keyboard.key_pressed("ESC"):
+            self.start_game()
             self.state = "menu"
 
+        if self.saci.dead:
+            self. win()
+
+        if self.victory_timer < 0:
+            self.victory_timer = 3
+
+        if self.keyboard.key_pressed("ESC"):
+            self.state = "menu"
     # ====================================
     # OPTIONS
     # ====================================
@@ -211,16 +183,10 @@ class Game:
         if self.cooldown < 0:
 
             self.fps = int(1 / dt) if dt > 0 else 0
-
             self.cooldown = 0.3
-
-        self.window.draw_text(
-            f"FPS: {self.fps}",
-            10,
-            10,
-            size=25,
-            color=(255, 255, 255)
-        )
+        text = f"FPS: {self.fps}"
+        self.window.draw_text(text, 10, 10, size=25,
+                              color=(255, 255, 255))
 
     def show_life(self):
         life = ""
@@ -228,15 +194,16 @@ class Game:
             life += "❤️"
         for _ in range(3-self.player.life):
             life += "💔"
-        self.window.draw_text(life,
-                              10,
-                              40,
-                              size=20,
-                              color=(255, 255, 255)
-                              )
+        self.window.draw_text(life, 10, 40, size=20,
+                              color=(255, 255, 255))
 
-    def reset_game(self):
-
+    def start_game(self):
         self.player = Player(self.window)
-
         self.saci = Saci(self.window)
+
+    def win(self):
+        if self.victory_timer > 0:
+            self.saci.animate(self.dt)
+        else:
+            self.victory_timer = 3
+            self.state = "menu"

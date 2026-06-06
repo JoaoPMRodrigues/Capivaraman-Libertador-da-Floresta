@@ -21,11 +21,10 @@ class Player(Entity):
         # =========================
         # STATUS
         # =========================
+        self.window = window
 
         self.life = 3
-
         self.speed = 500
-
         self.direction = "right"
 
         # =========================
@@ -62,7 +61,7 @@ class Player(Entity):
 
         self.shoot_timer = 0
 
-        self.shoot_cooldown = 0.3
+        self.shoot_cooldown = 0
 
         # =========================
         # ANIMAÇÕES
@@ -274,12 +273,7 @@ class Player(Entity):
     # UPDATE
     # ====================================
 
-    def update(
-        self,
-        window,
-        keyboard,
-        dt
-    ):
+    def update(self, keyboard, dt):
 
         if self.dead:
             self.death_timer -= dt
@@ -351,7 +345,7 @@ class Player(Entity):
             0,
             min(
                 self.sprite.x,
-                window.width
+                self.window.width
                 - self.sprite.width
             )
         )
@@ -360,7 +354,7 @@ class Player(Entity):
             0,
             min(
                 self.sprite.y,
-                window.height
+                self.window.height
                 - self.sprite.height
             )
         )
@@ -370,23 +364,17 @@ class Player(Entity):
         # --------------------
 
         if self.hit_timer > 0:
-
             self.hit_timer -= dt
-
             self.current_animation = (
                 self.hit_frames
             )
 
         else:
-
             if self.direction == "right":
-
                 if moving:
-
                     self.current_animation = (
                         self.walk_right_frames
                     )
-
                 else:
 
                     self.current_animation = (
@@ -449,7 +437,7 @@ class Player(Entity):
             and self.shoot_timer <= 0
         ):
 
-            self.shoot(window)
+            self.shoot(self.window)
 
             self.shoot_timer = (
                 self.shoot_cooldown
@@ -466,7 +454,7 @@ class Player(Entity):
             if (
                 bullet.sprite.x < -100
                 or bullet.sprite.x >
-                window.width + 100
+                self.window.width + 100
             ):
 
                 self.bullets.remove(

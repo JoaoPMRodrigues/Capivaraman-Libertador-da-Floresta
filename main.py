@@ -11,7 +11,7 @@ game = Game(window)
 while True:
 
     dt = window.delta_time()
-
+    game.dt = dt
     game.update(dt)
     game.draw()
 

@@ -12,11 +12,7 @@ class Saci(Boss):
 
         super().__init__(
             "sprites/boss/saci/idle_right/saci_idle1.png",
-            window,
-            1150,
-            500,
-            100
-        )
+            window, 1150, 500, 100)
 
         # ==========================
         # POSIÇÕES DA ARENA
@@ -38,55 +34,27 @@ class Saci(Boss):
         # ==========================
 
         self.idle_frames = [
-            Sprite(
-                f"sprites/boss/saci/idle_right/{img}"
-            )
-            for img in sorted(
-                listdir(
-                    "sprites/boss/saci/idle_right"
-                )
-            )
-        ]
+            Sprite(f"sprites/boss/saci/idle_right/{img}")
+            for img in sorted(listdir("sprites/boss/saci/idle_right"))]
 
         self.attack_frames = [
-            Sprite(
-                f"sprites/boss/saci/attack/{img}"
-            )
-            for img in sorted(
-                listdir(
-                    "sprites/boss/saci/attack"
-                )
-            )
-        ]
+            Sprite(f"sprites/boss/saci/attack/{img}")
+            for img in sorted(listdir("sprites/boss/saci/attack"))]
 
         self.hit_frames = [
-            Sprite(
-                f"sprites/boss/saci/hit/{img}"
-            )
-            for img in sorted(
-                listdir(
-                    "sprites/boss/saci/hit"
-                )
-            )
-        ]
+            Sprite(f"sprites/boss/saci/hit/{img}")
+            for img in sorted(listdir("sprites/boss/saci/hit"))]
 
         self.death_frames = [
-            Sprite(
-                f"sprites/boss/saci/death/{img}"
-            )
-            for img in sorted(
-                listdir(
-                    "sprites/boss/saci/death"
-                )
-            )
-        ]
+            Sprite(f"sprites/boss/saci/death/{img}")
+            for img in sorted(listdir("sprites/boss/saci/death"))]
 
         self.dead = False
         self.frame = 0
 
         self.animation_timer = 0
 
-        self.animation_speed = 0.15
+        self.animation_speed = 0.4
 
         self.current_animation = self.idle_frames
 
@@ -124,9 +92,9 @@ class Saci(Boss):
 
                 if self.frame >= len(self.current_animation):
 
-                    self.frame = len(
-                        self.current_animation
-                    ) - 1
+                    self.frame = len(self.current_animation) - 1
+
+                return
 
             else:
 
@@ -176,21 +144,15 @@ class Saci(Boss):
 
     def throw_tornado(self):
 
-        tornado = Tornado(
-
-            self.sprite.x,
-
-            self.sprite.y +
-            self.sprite.height / 2,
-
-            self.direction
-        )
+        tornado = Tornado(self.sprite.x,
+                          self.sprite.y + self.sprite.height / 2,
+                          self.direction)
 
         self.tornados.append(tornado)
 
     def dash(self):
 
-        if self.current_position != 1:
+        if self.current_position != 2:
             return
 
         self.dashing = True
@@ -211,7 +173,7 @@ class Saci(Boss):
             if self.sprite.x <= 250:
 
                 self.sprite.x = 250
-
+                self.sprite.y = 500
                 self.current_position = 2
 
                 self.direction = "right"
@@ -229,6 +191,7 @@ class Saci(Boss):
             if self.sprite.x >= 1150:
 
                 self.sprite.x = 1150
+                self.sprite.y = 500
 
                 self.current_position = 0
 
@@ -238,9 +201,7 @@ class Saci(Boss):
 
                 self.state = "idle"
 
-        if self.sprite.collided(
-            player.sprite
-        ):
+        if self.sprite.collided(player.sprite):
 
             player.take_damage(1)
 
@@ -285,7 +246,7 @@ class Saci(Boss):
     def update(self, dt, player):
 
         if self.dead:
-
+            self.tornados.clear()
             self.current_animation = (
                 self.death_frames
             )
@@ -304,22 +265,16 @@ class Saci(Boss):
 
         if self.hp <= 50:
 
-            if (
-                not self.dashing
+            if (not self.dashing
                 and self.current_position in [1, 2]
-                and randint(0, 400) == 0
-            ):
+                    and randint(-200, 200) == 0):
                 self.dash()
 
        # -----------------------
 
-        if (
-            self.teleport_timer
-            >= self.teleport_cooldown
-        ):
+        if (self.teleport_timer >= self.teleport_cooldown):
 
             self.teleport()
-
             self.teleport_timer = 0
 
         # -----------------------
@@ -381,16 +336,13 @@ class Saci(Boss):
             ):
 
                 player.take_damage(1)
-
                 self.tornados.remove(
                     tornado
                 )
 
-            elif (
-                tornado.sprite.x < -200
-                or tornado.sprite.x >
-                self.sprite.x + 2000
-            ):
+            elif (tornado.sprite.x < -200 or
+                  tornado.sprite.x > 1700
+                  ):
 
                 self.tornados.remove(
                     tornado
@@ -399,7 +351,6 @@ class Saci(Boss):
     def draw(self):
 
         self.sprite.draw()
-
+        self.draw_hp_bar()
         for tornado in self.tornados:
-
             tornado.draw()

@@ -3,25 +3,14 @@ from lib.entity import *
 
 class Boss(Entity):
 
-    def __init__(
-        self,
-        path,
-        window,
-        x,
-        y,
-        hp
-    ):
+    def __init__(self, path, window, x, y, hp):
 
-        super().__init__(
-            path,
-            window,
-            x,
-            y
-        )
+        super().__init__(path, window, x, y
+                         )
 
         self.max_hp = hp
         self.hp = hp
-
+        self.window = window
         self.dead = False
 
         self.state = "idle"
@@ -43,7 +32,7 @@ class Boss(Entity):
 
             self.state = "death"
 
-    def draw_hp_bar(self, window):
+    def draw_hp_bar(self):
 
         largura_total = 500
 
@@ -52,24 +41,16 @@ class Boss(Entity):
         largura_atual = largura_total * porcentagem
 
         # Fundo
-        window.draw_text(
-            "█" * 50,
-            500,
-            20,
-            size=20,
-            color=(80, 80, 80)
-        )
+        self.window.draw_text("█" * 50, 500, 20, size=20, color=(80, 80, 80))
 
         # Vida
-        window.draw_text(
+        self.window.draw_text(
             "█" * int(50 * porcentagem),
-            500,
-            20,
-            size=20,
+            500, 20, size=20,
             color=(255, 0, 0)
         )
 
-        window.draw_text(
+        self.window.draw_text(
             f"{self.hp}/{self.max_hp}",
             490,
             50,
