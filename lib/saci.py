@@ -11,7 +11,7 @@ class Saci(Boss):
     def __init__(self, window):
 
         super().__init__(
-            "sprites/boss/saci/idle_right/saci_idle1.png",
+            "sprites/boss/saci/idle_left/saci_idle1.png",
             window, 1150, 500, 100)
 
         # ==========================
@@ -33,10 +33,14 @@ class Saci(Boss):
         # ANIMAÇÕES
         # ==========================
 
-        self.idle_frames = [
+        self.idle_right_frames = [
             Sprite(f"sprites/boss/saci/idle_right/{img}")
             for img in sorted(listdir("sprites/boss/saci/idle_right"))]
 
+        self.idle_left_frames = [
+            Sprite(f"sprites/boss/saci/idle_left/{img}")
+            for img in sorted(listdir("sprites/boss/saci/idle_left"))
+        ]
         self.attack_frames = [
             Sprite(f"sprites/boss/saci/attack/{img}")
             for img in sorted(listdir("sprites/boss/saci/attack"))]
@@ -56,7 +60,7 @@ class Saci(Boss):
 
         self.animation_speed = 0.4
 
-        self.current_animation = self.idle_frames
+        self.current_animation = self.idle_right_frames
 
         self.tornados = []
 
@@ -266,7 +270,7 @@ class Saci(Boss):
         if self.hp <= 50:
 
             if (not self.dashing
-                and self.current_position in [1, 2]
+                and self.current_position == 2
                     and randint(-200, 200) == 0):
                 self.dash()
 
@@ -320,10 +324,10 @@ class Saci(Boss):
             )
 
         else:
-
-            self.current_animation = (
-                self.idle_frames
-            )
+            if self.direction == "left":
+                self.current_animation = self.idle_left_frames
+            else:
+                self.current_animation = self.idle_right_frames
 
         self.animate(dt)
 

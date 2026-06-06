@@ -15,9 +15,7 @@ class Game:
 
         self.state = "menu"
 
-        # =====================
-        # BACKGROUNDS
-        # =====================
+        # Backgrounds
 
         self.menu_bg = Sprite("sprites/wallpaper/start.png")
 
@@ -25,9 +23,7 @@ class Game:
             "sprites/wallpaper/level/lvl1.png"
         )
 
-        # =====================
-        # MENU BUTTONS
-        # =====================
+        # Menu Buttons
 
         self.start = Button("sprites/button/start.png",
                             window, 575, 200)
@@ -38,9 +34,7 @@ class Game:
         self.exit = Button("sprites/button/exit.png",
                            window, 575, 600)
 
-        # =====================
-        # OPTIONS BUTTONS
-        # =====================
+        # Options Buttons
 
         self.easy = Button("sprites/button/easy.png",
                            window, 575, 200)
@@ -51,25 +45,22 @@ class Game:
         self.hard = Button("sprites/button/hard.png",
                            window, 575, 600)
 
-        # =====================
-        # PLAYER
-        # =====================
+        # Player
 
         self.player = Player(window)
 
-        # =====================
         # FPS
-        # =====================
 
         self.cooldown = 0.3
         self.fps = 0
 
+        # Boss
+
         self.saci = Saci(window)
 
-        self.victory_timer = 3
-    # ====================================
-    # UPDATE PRINCIPAL
-    # ====================================
+        self.endgame_timer = 2
+
+    # Main update
 
     def update(self, dt):
 
@@ -82,9 +73,7 @@ class Game:
         elif self.state == "options":
             self.update_options()
 
-    # ====================================
-    # DRAW PRINCIPAL
-    # ====================================
+    # Main Draw
 
     def draw(self):
 
@@ -112,15 +101,12 @@ class Game:
             self.normal.draw()
             self.hard.draw()
 
-    # ====================================
     # MENU
-    # ====================================
 
     def update_menu(self):
 
         if self.start.clicked(self.window):
             self.start_game()
-            self.state = "game"
 
         elif self.options.clicked(self.window):
             self.state = "options"
@@ -128,9 +114,7 @@ class Game:
         elif self.exit.clicked(self.window):
             self.window.close()
 
-    # ====================================
     # GAME
-    # ====================================
 
     def update_game(self, dt):
 
@@ -138,23 +122,21 @@ class Game:
 
         self.saci.update(dt, self.player)
 
-        self.victory_timer -= dt
-
-        if self.player.life <= 0:
-            self.start_game()
-            self.state = "menu"
+        if self.player.dead:
+            self.endgame_timer -= dt
+            self.lose()
 
         if self.saci.dead:
-            self. win()
+            self.endgame_timer -= dt
+            self.win()
 
-        if self.victory_timer < 0:
-            self.victory_timer = 3
+        if self.endgame_timer < 0:
+            self.endgame_timer = 2
 
         if self.keyboard.key_pressed("ESC"):
             self.state = "menu"
-    # ====================================
-    # OPTIONS
-    # ====================================
+
+    # Option Update
 
     def update_options(self):
 
@@ -170,9 +152,7 @@ class Game:
         if self.keyboard.key_pressed("ESC"):
             self.state = "menu"
 
-    # ====================================
     # FPS
-    # ====================================
 
     def show_fps(self):
 
@@ -198,12 +178,20 @@ class Game:
                               color=(255, 255, 255))
 
     def start_game(self):
+        self.state = "game"
         self.player = Player(self.window)
         self.saci = Saci(self.window)
 
     def win(self):
-        if self.victory_timer > 0:
+        if self.endgame_timer > 0:
             self.saci.animate(self.dt)
         else:
-            self.victory_timer = 3
+            self.endgame_timer = 2
+            self.state = "menu"
+
+    def lose(self):
+        if self.endgame_timer > 0:
+            self.player.animate(self.dt)
+        else:
+            self.endgame_timer = 2
             self.state = "menu"

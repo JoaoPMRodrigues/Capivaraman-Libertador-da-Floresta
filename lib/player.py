@@ -61,7 +61,7 @@ class Player(Entity):
 
         self.shoot_timer = 0
 
-        self.shoot_cooldown = 0
+        self.shoot_cooldown = 0.3
 
         # =========================
         # ANIMAÇÕES
@@ -176,8 +176,8 @@ class Player(Entity):
     # ====================================
 
     def animate(self, dt):
-
-        self.animation_timer += dt
+        self.dt = dt
+        self.animation_timer += self.dt
 
         if self.animation_timer >= self.animation_speed:
 
@@ -237,16 +237,13 @@ class Player(Entity):
         if self.life <= 0:
 
             self.life = 0
-
             self.dead = True
-
             self.death_timer = 2
-
             self.frame = 0
-
             self.current_animation = (
                 self.death_frames
             )
+            self.animate(self.dt)
     # ====================================
     # TIROS
     # ====================================
