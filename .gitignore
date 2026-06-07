@@ -10,4 +10,8 @@ sandbox/
 
 #Remove metatados do windows
 *Zone.Identifier*
+*:Zone.Identifier
 *.png:Zone.Identifier
+
+# Remove arquivo de save
+save_data.jason
