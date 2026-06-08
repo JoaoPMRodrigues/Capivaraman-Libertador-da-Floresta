@@ -14,4 +14,4 @@ sandbox/
 *.png:Zone.Identifier
 
 # Remove arquivo de save
-save_data.jason
+save_data.json
