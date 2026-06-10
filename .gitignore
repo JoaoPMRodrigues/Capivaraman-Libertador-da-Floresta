@@ -15,3 +15,4 @@ sandbox/
 
 # Remove arquivo de save
 save_data.json
+*.json
