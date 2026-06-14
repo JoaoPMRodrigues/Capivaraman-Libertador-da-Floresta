@@ -27,11 +27,12 @@ class _Level1:
         self.saci = Saci(window)
 
         self._keyboard = Keyboard()
-        self.dt = 0.0
-
+        self.dt = self.window.delta_time()
+        self.cooldown_fps = 2
+        self.fps = int(1/self.dt if self.dt > 0 else 0)
         # Controla o tempo antes do resultado
         self._result_pending: str | None = None
-        self._result_timer = 1.5  
+        self._result_timer = 1.5
 
     def update(self, keyboard: Keyboard, dt: float):
         self._keyboard = keyboard
@@ -79,9 +80,13 @@ class _Level1:
         self._draw_fps()
 
     def _draw_fps(self):
-        dt = self.window.delta_time()
-        fps = int(1 / dt) if dt > 0 else 0
-        self.window.draw_text(f"FPS: {fps}", 10, 10, size=25, color=(255, 255, 255))
+        if self.cooldown_fps < 0:
+            self.dt = self.window.delta_time()
+            self.cooldown_fps = 2
+            self.fps = int(1 / self.dt) if self.dt > 0 else 0
+        self.window.draw_text(f"FPS: {self.fps}",
+                              10, 10, size=25, color=(255, 255, 255))
+        self.cooldown_fps -= self.dt
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -107,7 +112,8 @@ class Game:
 
         # ── Botões do menu principal ──────────────────────────────────
         self.btn_start = Button("sprites/button/start.png",   window, 575, 200)
-        self.btn_options = Button("sprites/button/options.png", window, 575, 400)
+        self.btn_options = Button(
+            "sprites/button/options.png", window, 575, 400)
         self.btn_exit = Button("sprites/button/exit.png",    window, 575, 600)
 
         # ── Botões de dificuldade ─────────────────────────────────────
