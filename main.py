@@ -1,7 +1,7 @@
 from pplay.window import *
 from lib.game import *
 
-window = Window(1920, 1080)
+window = Window(1500, 1000)
 window.set_title("Capivaraman - O Libertador da Floresta")
 
 game = Game(window)
