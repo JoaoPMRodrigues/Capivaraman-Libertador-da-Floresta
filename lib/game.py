@@ -9,89 +9,11 @@ from lib.level_manager import LevelManager
 from lib.level_select import LevelSelect
 from lib.level_placeholder import LevelPlaceholder
 from lib.transition import Transition
+from lib.levels.level1 import *
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Fase 1
-# ─────────────────────────────────────────────────────────────────────────────
+# Game
 
-class _Level1:
-
-    def __init__(self, window: Window):
-        self.window = window
-        self.name = "Floresta Primordial"
-        self.level_number = 1
-
-        self.bg = Sprite("sprites/wallpaper/level/lvl1.png")
-        self.player = Player(window)
-        self.saci = Saci(window)
-
-        self._keyboard = Keyboard()
-        self.dt = self.window.delta_time()
-        self.cooldown_fps = 2
-        self.fps = int(1/self.dt if self.dt > 0 else 0)
-        # Controla o tempo antes do resultado
-        self._result_pending: str | None = None
-        self._result_timer = 1.5
-
-    def update(self, keyboard: Keyboard, dt: float):
-        self._keyboard = keyboard
-        self.dt = dt
-
-        self.player.update(keyboard, dt)
-        self.saci.update(dt, self.player)
-
-        # ── Resultado pendente: espera animação ──────────────────────
-        if self._result_pending is not None:
-            self._result_timer -= dt
-            if self._result_timer <= 0:
-                return self._result_pending
-            return None
-
-        # ── Derrota ──────────────────────────────────────────────────
-        if self.player.dead:
-            self._result_pending = "lose"
-            self._result_timer = 1.5
-            return None
-
-        # ── Vitória ──────────────────────────────────────────────────
-        if self.saci.dead:
-            self._result_pending = "win"
-            self._result_timer = 1.5
-            return None
-
-        # ── Atalho debug ─────────────────────────────────────────────
-        if keyboard.key_pressed("ESC"):
-            return "menu"
-
-        return None
-
-    def draw(self):
-        self.bg.draw()
-
-        # HUD: vida do jogador
-        life = "❤️" * self.player.life + "💔" * (3 - self.player.life)
-        self.window.draw_text(life, 10, 40, size=20, color=(255, 255, 255))
-
-        self.player.draw()
-        self.saci.draw()
-
-        # FPS
-        self._draw_fps()
-
-    def _draw_fps(self):
-        if self.cooldown_fps < 0:
-            self.dt = self.window.delta_time()
-            self.cooldown_fps = 2
-            self.fps = int(1 / self.dt) if self.dt > 0 else 0
-        self.window.draw_text(f"FPS: {self.fps}",
-                              10, 10, size=25, color=(255, 255, 255))
-        self.cooldown_fps -= self.dt
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Game -
-# ─────────────────────────────────────────────────────────────────────────────
 
 class Game:
 
@@ -100,37 +22,35 @@ class Game:
         self.keyboard = Keyboard()
         self.dt = 0.0
 
-        # ── Estado ───────────────────────────────────────────────────
+        # Estado
         self.state = "menu"
 
-        # ── Gerenciador de fases ──────────────────────────────────────
+        # Gerenciador de fases
         self.lm = LevelManager()
 
-        # ── Sprites de fundo compartilhados ──────────────────────────
+        # Sprites de fundo compartilhados
         self.menu_bg = Sprite("sprites/wallpaper/start.png")
         self.game_bg = Sprite("sprites/wallpaper/level/lvl1.png")
 
-        # ── Botões do menu principal ──────────────────────────────────
-        self.btn_start = Button("sprites/button/start.png",   window, 575, 200)
+        # Botões do menu principal
+        self.btn_start = Button("sprites/button/start.png",   window, 0, 200)
         self.btn_options = Button(
-            "sprites/button/options.png", window, 575, 400)
-        self.btn_exit = Button("sprites/button/exit.png",    window, 575, 600)
+            "sprites/button/options.png", window, 0, 450)
+        self.btn_exit = Button("sprites/button/exit.png",    window, 0, 700)
 
-        # ── Botões de dificuldade ─────────────────────────────────────
-        self.btn_easy = Button("sprites/button/easy.png",   window, 575, 200)
-        self.btn_normal = Button("sprites/button/normal.png", window, 575, 400)
-        self.btn_hard = Button("sprites/button/hard.png",   window, 575, 600)
+        # Botões de dificuldade
+        self.btn_easy = Button("sprites/button/easy.png",   window, 0, 200)
+        self.btn_normal = Button("sprites/button/normal.png", window, 0, 400)
+        self.btn_hard = Button("sprites/button/hard.png",   window, 0, 600)
 
-        # ── Seleção de fases ──────────────────────────────────────────
+        #  Seleção de fases
         self.level_select = LevelSelect(window, self.lm, self.menu_bg)
 
-        # ── Fase e transição ativos ────────
+        #  Fase e transição ativos
         self._level = None          # instância de _Level1 ou LevelPlaceholder
         self._transition = None     # instância de Transition
 
-    # ─────────────────────────────────────────────────────────────────
     # Loop principal
-    # ─────────────────────────────────────────────────────────────────
 
     def update(self, dt: float):
         self.dt = dt
@@ -160,18 +80,16 @@ class Game:
             case "transition":
                 self._transition.draw(self.game_bg)
 
-    # ─────────────────────────────────────────────────────────────────
     # Menu principal
-    # ─────────────────────────────────────────────────────────────────
 
     def _update_menu(self):
-        if self.btn_start.clicked(self.window):
+        if self.btn_start.clicked():
             self._enter_level_select()
 
-        elif self.btn_options.clicked(self.window):
+        elif self.btn_options.clicked():
             self.state = "options"
 
-        elif self.btn_exit.clicked(self.window):
+        elif self.btn_exit.clicked():
             self.window.close()
 
     def _draw_menu(self):
@@ -180,14 +98,17 @@ class Game:
         self.btn_options.draw()
         self.btn_exit.draw()
 
-    # ─────────────────────────────────────────────────────────────────
     # Opções
-    # ─────────────────────────────────────────────────────────────────
 
     def _update_options(self):
-        if (self.btn_easy.clicked(self.window) or
-                self.btn_normal.clicked(self.window) or
-                self.btn_hard.clicked(self.window)):
+        if (self.btn_easy.clicked()):
+            Player.mode = 1
+            self.state = "menu"
+        elif (self.btn_normal.clicked()):
+            Player.mode = 1.2
+            self.state = "menu"
+        elif (self.btn_hard.clicked()):
+            Player.mode = 1.4
             self.state = "menu"
 
         if self.keyboard.key_pressed("ESC"):
@@ -199,9 +120,7 @@ class Game:
         self.btn_normal.draw()
         self.btn_hard.draw()
 
-    # ─────────────────────────────────────────────────────────────────
     # Seleção de fases
-    # ─────────────────────────────────────────────────────────────────
 
     def _enter_level_select(self):
         """Atualiza os dados e entra na tela de seleção."""
@@ -218,24 +137,20 @@ class Game:
             # Jogador escolheu a fase `result`
             self._start_level(result)
 
-    # ─────────────────────────────────────────────────────────────────
     # Instanciar e iniciar uma fase
-    # ─────────────────────────────────────────────────────────────────
 
     def _start_level(self, level_num: int):
         """Instancia a fase correta e entra no estado 'playing'."""
         self.lm.current_level = level_num
 
         if level_num == 1:
-            self._level = _Level1(self.window)
+            self._level = Level1(self.window)
         else:
             self._level = LevelPlaceholder(self.window, level_num)
 
         self.state = "playing"
 
-    # ─────────────────────────────────────────────────────────────────
     # Jogo em execução
-    # ─────────────────────────────────────────────────────────────────
 
     def _update_playing(self, dt: float):
         result = self._level.update(self.keyboard, dt)
@@ -276,9 +191,7 @@ class Game:
         )
         self.state = "transition"
 
-    # ─────────────────────────────────────────────────────────────────
     # Transição entre fases
-    # ─────────────────────────────────────────────────────────────────
 
     def _update_transition(self, dt: float):
         result = self._transition.update(dt)

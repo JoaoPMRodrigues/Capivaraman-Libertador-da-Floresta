@@ -12,7 +12,7 @@ class Saci(Boss):
 
         super().__init__(
             "sprites/boss/saci/idle_left/saci_idle1.png",
-            window, 1150, 500, 100)
+            window, 1600, 500, 100)
 
         # ==========================
         # POSIÇÕES DA ARENA
@@ -20,11 +20,11 @@ class Saci(Boss):
 
         self.positions = [
 
-            (1150, 500),  # chão direito
+            (1600, 500),  # chão direito
 
-            (1150, 50),  # plataforma direita
+            (1600, 50),  # plataforma direita
 
-            (250, 500)    # chão esquerdo
+            (150, 500)    # chão esquerdo
         ]
 
         self.current_position = 0

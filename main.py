@@ -1,7 +1,10 @@
 from pplay.window import *
 from lib.game import *
+from rich.traceback import install
+install()
+# Se o código não rodar, esse comando ajuda a ver onde está o erro
 
-window = Window(1500, 1000)
+window = Window(1920, 1080)
 window.set_title("Capivaraman - O Libertador da Floresta")
 
 game = Game(window)

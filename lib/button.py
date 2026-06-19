@@ -6,12 +6,12 @@ from lib.entity import *
 class Button(Entity):
     was_pressed = False
 
-    def __init__(self, imagem, window, x, y):
-        super().__init__(imagem, window, x, y)
-        # Armazena se o mouse estava pressionado no frame anterior
+    def __init__(self, path, window, x, y):
+        super().__init__(path, window, x, y)
+        self.sprite.x = window.width/2 - self.sprite.width/2
 
-    def clicked(self, window):
-        mouse = window.mouse
+    def clicked(self):
+        mouse = self.window.mouse
         hovering = mouse.is_over_object(self.sprite)
         pressed = mouse.button_pressed(1)  # botão esquerdo
 
@@ -25,5 +25,5 @@ class Button(Entity):
 
         return False
 
-    def update(self, window):
-        return self.clicked(window)
+    def update(self):
+        return self.clicked(self.window)

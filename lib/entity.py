@@ -7,6 +7,7 @@ class Entity(ABC):
         self.sprite = Sprite(path)
         self.sprite.x = x
         self.sprite.y = y
+        self.window = window
         if x == None:
             self.sprite.x = window.width/2+self.sprite.width/2
         if y == None:
