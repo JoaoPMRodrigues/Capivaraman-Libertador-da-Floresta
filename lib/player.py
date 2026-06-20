@@ -132,13 +132,6 @@ class Player(Entity):
     # =========================================================
 
     def _get_jump_frame(self):
-        """
-        Retorna o frame correto da animacao de pulo:
-          frame 0 — subindo rapido (vel_y muito negativo)
-          frame 1 — apice / no ar (vel_y proximo de zero ou ainda subindo)
-                    TRAVA neste frame enquanto estiver subindo
-          frame 2 — descendo (vel_y positivo)
-        """
         frames = (self.jump_right_frames if self.direction == "right"
                   else self.jump_left_frames)
         n = len(frames)
@@ -159,7 +152,6 @@ class Player(Entity):
             return min(2, n - 1)
 
     def _show_jump_frame(self, idx):
-        """Troca o sprite para o frame de pulo correto conforme direcao."""
         frames = (self.jump_right_frames if self.direction == "right"
                   else self.jump_left_frames)
         if idx >= len(frames):
