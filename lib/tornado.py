@@ -34,7 +34,7 @@ class Tornado:
         self.sprite.y = player_y - self.sprite.height
 
         self.direction = direction
-        self.speed     = 450
+        self.speed     = 550
 
         self.hp        = self.HP_MAX
         self.dead      = False
