@@ -41,7 +41,7 @@ class Saci(Boss):
         # combate
         self.tornados         = []
         self.attack_timer     = 0
-        self.attack_cooldown  = 4
+        self.attack_cooldown  = 2.7
 
         # dash
         self.dashing      = False
@@ -232,7 +232,7 @@ class Saci(Boss):
         self.attack_timer += dt
 
         # dash com cooldown (fase 2: hp <= 50)
-        if self.hp <= 50 and not self.dashing:
+        if self.hp <= 65 and not self.dashing:
             self.dash_timer += dt
             if self.dash_timer >= self.dash_cooldown:
                 # adiciona um pouco de aleatoriedade ao timing

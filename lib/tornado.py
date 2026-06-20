@@ -14,7 +14,7 @@ class Tornado:
     - Anima com os frames disponíveis em sprites/boss/saci/tornado/
     """
 
-    HP_MAX = 4   # tiros necessarios para destruir
+    HP_MAX = 5   # tiros necessarios para destruir
 
     def __init__(self, x, player_y, direction):
 
@@ -34,7 +34,7 @@ class Tornado:
         self.sprite.y = player_y - self.sprite.height
 
         self.direction = direction
-        self.speed     = 550
+        self.speed     = 650
 
         self.hp        = self.HP_MAX
         self.dead      = False
