@@ -10,26 +10,23 @@ _DARK   = "sprites/bosses/select/dark"
 
 _SPRITE_FILES = {
     1: "1_saci.png",
-    2: "2_kurupira.png",
-    3: "3_mula.png",
-    4: "4_boto.png",
-    5: "5_corpo_seco.png",
+    2: "3_mula.png",
+    3: "4_boto.png",
+    4: "5_corpo_seco.png",
 }
 
 _BOSS_NAMES = {
     1: "Saci",
-    2: "Kurupira",
-    3: "Mula Sem Cabeca",
-    4: "Boto Cor de Rosa",
-    5: "Corpo Seco",
+    2: "Mula Sem Cabeca",
+    3: "Boto Cor de Rosa",
+    4: "Corpo Seco",
 }
 
 _LEVEL_SUBTITLES = {
     1: "Floresta Primordial",
-    2: "Pantano das Sombras",
-    3: "Cavernas do Fogo",
-    4: "Rio Amazonas",
-    5: "Dominio do Caos",
+    2: "Trilha das Brasas",
+    3: "Rio Amazonas",
+    4: "Dominio do Caos",
 }
 
 # ── Layout ────────────────────────────────────────────────────────────────────

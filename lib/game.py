@@ -140,7 +140,6 @@ class Game:
     # Instanciar e iniciar uma fase
 
     def _start_level(self, level_num: int):
-        """Instancia a fase correta e entra no estado 'playing'."""
         self.lm.current_level = level_num
 
         if level_num == 1:

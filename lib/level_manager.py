@@ -4,7 +4,7 @@ import os
 
 class LevelManager:
     SAVE_FILE = "save_data.json"
-    TOTAL_LEVELS = 5
+    TOTAL_LEVELS = 4
 
     def __init__(self):
         self.total_levels = self.TOTAL_LEVELS
