@@ -4,13 +4,13 @@ from pplay.window import Window
 
 from lib.button import Button
 from lib.player import Player
-from lib.saci import Saci
+from lib.boss.saci import Saci
 from lib.level_manager import LevelManager
 from lib.level_select import LevelSelect
 from lib.level_placeholder import LevelPlaceholder
 from lib.transition import Transition
 from lib.levels.level1 import *
-
+from lib.levels.level2 import *
 
 # Game
 
@@ -145,6 +145,8 @@ class Game:
 
         if level_num == 1:
             self._level = Level1(self.window)
+        elif level_num == 2:
+            self._level = Level2(self.window)
         else:
             self._level = LevelPlaceholder(self.window, level_num)
 

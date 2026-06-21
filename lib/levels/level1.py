@@ -2,7 +2,7 @@ from pplay.window import Window
 from pplay.sprite import Sprite
 from pplay.keyboard import Keyboard
 
-from lib.saci import Saci
+from lib.boss.saci import Saci
 from lib.player import Player
 
 

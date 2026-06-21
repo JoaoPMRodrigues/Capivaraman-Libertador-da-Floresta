@@ -1,9 +1,9 @@
-from lib.boss import *
+from lib.boss.boss import *
 from pplay.sprite import *
 from random import randint
 from os import listdir
 
-from lib.tornado import *
+from lib.boss.tornado import *
 
 FLOOR_Y = 375
 
@@ -22,38 +22,40 @@ class Saci(Boss):
             (1650, FLOOR_Y),   # 0: direita
             (30,   FLOOR_Y),   # 1: esquerda
         ]
-        self.positions        = list(self._raw_positions)
+        self.positions = list(self._raw_positions)
         self.current_position = 0   # comeca na direita
 
         # animacoes
-        self.idle_right_frames = self._load_frames("sprites/boss/saci/idle_right")
-        self.idle_left_frames  = self._load_frames("sprites/boss/saci/idle_left")
-        self.attack_frames     = self._load_frames("sprites/boss/saci/attack")
-        self.hit_frames        = self._load_frames("sprites/boss/saci/hit")
-        self.death_frames      = self._load_frames("sprites/boss/saci/death")
+        self.idle_right_frames = self._load_frames(
+            "sprites/boss/saci/idle_right")
+        self.idle_left_frames = self._load_frames(
+            "sprites/boss/saci/idle_left")
+        self.attack_frames = self._load_frames("sprites/boss/saci/attack")
+        self.hit_frames = self._load_frames("sprites/boss/saci/hit")
+        self.death_frames = self._load_frames("sprites/boss/saci/death")
 
-        self.dead              = False
-        self.frame             = 0
-        self.animation_timer   = 0
-        self.animation_speed   = 0.4
+        self.dead = False
+        self.frame = 0
+        self.animation_timer = 0
+        self.animation_speed = 0.4
         self.current_animation = self.idle_left_frames
 
         # combate
-        self.tornados         = []
-        self.attack_timer     = 0
-        self.attack_cooldown  = 2.7
+        self.tornados = []
+        self.attack_timer = 0
+        self.attack_cooldown = 2.7
 
         # dash
-        self.dashing      = False
-        self.dash_speed   = 1100
-        self.dash_target  = 0
-        self.direction    = "left"
+        self.dashing = False
+        self.dash_speed = 1100
+        self.dash_target = 0
+        self.direction = "left"
 
         # cooldown do dash para nao ficar dasheando sem parar
-        self.dash_timer    = 0
+        self.dash_timer = 0
         self.dash_cooldown = 3.0   # segundos entre dashes (fase 2)
 
-        self.hit_timer    = 0
+        self.hit_timer = 0
         self.hit_duration = 0.2
 
         self._fix_positions()
@@ -67,8 +69,8 @@ class Saci(Boss):
         return [Sprite(f"{path}/{f}") for f in files]
 
     def _fix_positions(self):
-        h  = self.sprite.height
-        w  = self.sprite.width
+        h = self.sprite.height
+        w = self.sprite.width
         ww = self.window.width
         wh = self.window.height
 
@@ -103,7 +105,7 @@ class Saci(Boss):
 
             old_x = self.sprite.x
             old_y = self.sprite.y
-            self.sprite   = self.current_animation[self.frame]
+            self.sprite = self.current_animation[self.frame]
             self.sprite.x = old_x
             self.sprite.y = old_y
 
@@ -131,22 +133,22 @@ class Saci(Boss):
             return
 
         self.dashing = True
-        self.state   = "dash"
+        self.state = "dash"
 
         # destino: lado oposto
         if self.current_position == 0:   # direita -> esquerda
             self.dash_target = 1
-            self.direction   = "left"
+            self.direction = "left"
         else:                             # esquerda -> direita
             self.dash_target = 0
-            self.direction   = "right"
+            self.direction = "right"
 
     def update_dash(self, dt, player):
         if not self.dashing:
             return
 
-        ww     = self.window.width
-        sw     = self.sprite.width
+        ww = self.window.width
+        sw = self.sprite.width
         dest_x = self.positions[self.dash_target][0]
         dest_y = self.positions[self.dash_target][1]
 
@@ -158,12 +160,12 @@ class Saci(Boss):
             arrived = self.sprite.x <= dest_x
 
         if arrived:
-            self.sprite.x         = dest_x
-            self.sprite.y         = dest_y
+            self.sprite.x = dest_x
+            self.sprite.y = dest_y
             self.current_position = self.dash_target
-            self.dashing          = False
-            self.state            = "idle"
-            self.dash_timer       = 0   # reinicia cooldown
+            self.dashing = False
+            self.state = "idle"
+            self.dash_timer = 0   # reinicia cooldown
             # olha para o centro da arena ao parar
             self.direction = "right" if self.current_position == 1 else "left"
 
@@ -210,8 +212,8 @@ class Saci(Boss):
         self.hp -= damage
 
         if self.hp <= 0:
-            self.hp    = 0
-            self.dead  = True
+            self.hp = 0
+            self.dead = True
             self.state = "death"
             self.frame = 0
             self.current_animation = self.death_frames
@@ -252,7 +254,7 @@ class Saci(Boss):
         # estado
         if self.hit_timer > 0:
             self.hit_timer -= dt
-            self.state      = "hit"
+            self.state = "hit"
         else:
             if not self.dashing:
                 self.state = "idle"
