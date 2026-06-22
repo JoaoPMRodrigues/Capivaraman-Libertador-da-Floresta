@@ -179,8 +179,9 @@ class Level2:
             if plat.check_landing(p, prev_y):
                 p.sprite.y = plat.y - p.sprite.height
                 p.vel_y = 0.0
+                p.is_on_ground = True
                 landed = True
-                break   # uma plataforma por frame é suficiente
+                break  # uma plataforma por frame é suficiente
 
         # ── Chão da fase ────────────────────────────────────────────────────
         if p.sprite.y + p.sprite.height >= FLOOR_Y:
