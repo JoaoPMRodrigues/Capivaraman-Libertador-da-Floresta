@@ -181,7 +181,7 @@ class Mula(Boss):
                 int(bullet.sprite.width), int(bullet.sprite.height)
             )
             for fb in self.fireballs[:]:
-                if not fb.dead and fb.rect.colliderect(b_rect):
+                if not fb.dead and fb.sprite.collided(b_rect):
                     destroyed = fb.take_hit()
                     if bullet in player.bullets:
                         player.bullets.remove(bullet)

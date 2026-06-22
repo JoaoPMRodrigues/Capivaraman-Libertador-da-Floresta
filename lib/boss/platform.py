@@ -1,17 +1,3 @@
-"""
-platform.py
------------
-Sistema de plataformas para o Level 2.
-
-Regras:
-- Player so colide pela parte de CIMA da plataforma
-- Colunas e parte de baixo nao tem colisao
-- Player sobe pulando, anda sobre a plataforma
-- Para descer: SPACE + S ou SPACE + DOWN (drop-through)
-  ou simplesmente pular ate vel_y positiva e cair pelo lado
-"""
-
-import pygame
 from pplay.sprite import Sprite
 
 
@@ -37,10 +23,8 @@ class Platform:
         else:
             self.sprite = None
 
-    # ------------------------------------------------------------------
     # Colisao de cima para baixo (one-way platform)
-    # Retorna True se o player POUSOU nesta plataforma neste frame
-    # ------------------------------------------------------------------
+    # Retorna True se o player POUSOU ou ESTÁ mantido nesta plataforma
 
     def check_landing(self, player, prev_y: float) -> bool:
         """
@@ -66,8 +50,13 @@ class Platform:
         prev_feet = prev_y + ph
         curr_feet = player.sprite.y + ph
 
-        # passou pelo topo da plataforma neste frame
+        # 1. Condição tradicional: passou pelo topo da plataforma neste frame
         if prev_feet <= self.y and curr_feet >= self.y:
+            return True
+
+        # 2. Correção do Bug: Se o player já estava no chão e a variação do sprite
+        # mudou a posição dos pés levemente para cima ou para baixo (tolerância de 15 pixels)
+        if player.is_on_ground and abs(curr_feet - self.y) <= 15:
             return True
 
         return False

@@ -18,62 +18,63 @@ class Player(Entity):
             550
         )
 
-        self.window    = window
-        self.life      = 3
-        self.speed     = 500
+        self.window = window
+        self.life = 3
+        self.speed = 500
         self.direction = "right"
-        self.dt        = 1 / 60
+        self.dt = 1 / 60
 
         # dano
-        self.invulnerable          = False
-        self.invulnerable_timer    = 0
+        self.invulnerable = False
+        self.invulnerable_timer = 0
         self.invulnerable_duration = 1.0
-        self.hit_timer             = 0
-        self.hit_duration          = 0.3
+        self.hit_timer = 0
+        self.hit_duration = 0.3
 
         self.FLOOR_Y = 550
 
         # pulo fisico
-        self.vel_y             = 0.0
-        self.gravity           = 2200.0
-        self.jump_force        = -1450.0
-        self.is_on_ground      = True
+        self.vel_y = 0.0
+        self.gravity = 2200.0
+        self.jump_force = -1450.0
+        self.is_on_ground = True
         self.jump_pressed_last = False
         # quando True, o level externo controla toda a fisica vertical
         self.external_physics = False
-        self._drop_through    = False
+        self._drop_through = False
 
         # tiros
-        self.bullets        = []
-        self.shoot_timer    = 0
+        self.bullets = []
+        self.shoot_timer = 0
         self.shoot_cooldown = 0.3
 
         # animacoes direcionais
-        self.idle_right_frames  = self._load_frames("sprites/player/idle_right")
-        self.idle_left_frames   = self._load_frames("sprites/player/idle_left")
-        self.walk_right_frames  = self._load_frames("sprites/player/walk_right")
-        self.walk_left_frames   = self._load_frames("sprites/player/walk_left")
+        self.idle_right_frames = self._load_frames("sprites/player/idle_right")
+        self.idle_left_frames = self._load_frames("sprites/player/idle_left")
+        self.walk_right_frames = self._load_frames("sprites/player/walk_right")
+        self.walk_left_frames = self._load_frames("sprites/player/walk_left")
 
         # hit e morte respeitam direcao
-        self.hit_right_frames   = self._load_frames("sprites/player/hit_right")
-        self.hit_left_frames    = self._load_frames("sprites/player/hit_left")
-        self.death_right_frames = self._load_frames("sprites/player/death_right")
-        self.death_left_frames  = self._load_frames("sprites/player/death_left")
+        self.hit_right_frames = self._load_frames("sprites/player/hit_right")
+        self.hit_left_frames = self._load_frames("sprites/player/hit_left")
+        self.death_right_frames = self._load_frames(
+            "sprites/player/death_right")
+        self.death_left_frames = self._load_frames("sprites/player/death_left")
 
         # fallback: se nao tiver versoes direcionais, usa as originais
         if not self.hit_right_frames:
             self.hit_right_frames = self._load_frames("sprites/player/hit")
         if not self.hit_left_frames:
-            self.hit_left_frames  = self._load_frames("sprites/player/hit")
+            self.hit_left_frames = self._load_frames("sprites/player/hit")
         if not self.death_right_frames:
             self.death_right_frames = self._load_frames("sprites/player/death")
         if not self.death_left_frames:
-            self.death_left_frames  = self._load_frames("sprites/player/death")
+            self.death_left_frames = self._load_frames("sprites/player/death")
 
         # pulo direcional: 3 frames por direcao
         # frame 0 - inicio do pulo  frame 1 - apice  frame 2 - descendo
         self.jump_right_frames = self._load_frames("sprites/player/jump_right")
-        self.jump_left_frames  = self._load_frames("sprites/player/jump_left")
+        self.jump_left_frames = self._load_frames("sprites/player/jump_left")
 
         # fallback: se nao tiver direcionais, usa jump/ generico
         _jump_generic = self._load_frames("sprites/player/jump")
@@ -85,17 +86,17 @@ class Player(Entity):
         if not self.jump_right_frames:
             self.jump_right_frames = _jump_generic
         if not self.jump_left_frames:
-            self.jump_left_frames  = _jump_generic
+            self.jump_left_frames = _jump_generic
 
         self.current_animation = self.idle_right_frames
-        self.frame             = 0
-        self.animation_timer   = 0
-        self.animation_speed   = 0.12
-        self.dead              = False
-        self.death_timer       = 0
+        self.frame = 0
+        self.animation_timer = 0
+        self.animation_speed = 0.12
+        self.dead = False
+        self.death_timer = 0
 
         # guarda qual frame do pulo mostrar (0, 1 ou 2)
-        self._jump_frame_idx   = 0
+        self._jump_frame_idx = 0
 
     def _load_frames(self, path):
         try:
@@ -125,7 +126,7 @@ class Player(Entity):
 
             old_x = self.sprite.x
             old_y = self.sprite.y
-            self.sprite   = self.current_animation[self.frame]
+            self.sprite = self.current_animation[self.frame]
             self.sprite.x = old_x
             self.sprite.y = old_y
 
@@ -169,7 +170,7 @@ class Player(Entity):
             idx = len(frames) - 1
         old_x = self.sprite.x
         old_y = self.sprite.y
-        self.sprite   = frames[idx]
+        self.sprite = frames[idx]
         self.sprite.x = old_x
         self.sprite.y = old_y
 
@@ -182,15 +183,15 @@ class Player(Entity):
             return
 
         self.life -= damage
-        self.invulnerable       = True
+        self.invulnerable = True
         self.invulnerable_timer = self.invulnerable_duration
-        self.hit_timer          = self.hit_duration
+        self.hit_timer = self.hit_duration
 
         if self.life <= 0:
-            self.life        = 0
-            self.dead        = True
+            self.life = 0
+            self.dead = True
             self.death_timer = 2
-            self.frame       = 0
+            self.frame = 0
             # morte respeita direcao atual
             self.current_animation = (
                 self.death_right_frames if self.direction == "right"
@@ -240,26 +241,27 @@ class Player(Entity):
             self.direction = "right"
             moving = True
 
-        # pulo com SPACE — disparo unico por pressao
+            # pulo com SPACE — disparo unico por pressao
         jump_pressed = keyboard.key_pressed("SPACE")
+        down_pressed = keyboard.key_pressed("S")
 
-        if jump_pressed and not self.jump_pressed_last:
+        if jump_pressed and not self.jump_pressed_last and not down_pressed:
             if self.is_on_ground:
-                self.vel_y        = self.jump_force
+                self.vel_y = self.jump_force
                 self.is_on_ground = False
-                self.frame        = 0
+                self.frame = 0
 
         self.jump_pressed_last = jump_pressed
 
         # fisica vertical
         # se external_physics=True o level externo cuida disso
         if not self.external_physics and not self.is_on_ground:
-            self.vel_y    += self.gravity * dt
+            self.vel_y += self.gravity * dt
             self.sprite.y += self.vel_y * dt
 
             if self.sprite.y >= self.FLOOR_Y:
                 self.sprite.y = self.FLOOR_Y
-                self.vel_y    = 0.0
+                self.vel_y = 0.0
                 self.is_on_ground = True
 
         # limites da tela

@@ -4,7 +4,6 @@ from pplay.window import Window
 
 from lib.button import Button
 from lib.player import Player
-from lib.boss.saci import Saci
 from lib.level_manager import LevelManager
 from lib.level_select import LevelSelect
 from lib.level_placeholder import LevelPlaceholder
