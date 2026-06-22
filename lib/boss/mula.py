@@ -1,23 +1,15 @@
-"""
-mula.py  -  Boss Mula Sem Cabeca
----------------------------------
-Comportamento:
-  Fase 1 (hp 100-51): idle na direita, atira fireballs periodicamente
-  Fase 2 (hp 50-0):   ataque mais rapido + carrega e dispara SuperFireball
-
-Estados: idle | attack | charge | hit | death
-"""
 import pygame
 from random import choice
 from os import listdir
+from os.path import isfile
 from pplay.sprite import Sprite
 from lib.boss.boss import Boss
 from lib.boss.fireball import Fireball, SuperFireball
 
 
-# Posicao fixa da Mula (direita da tela)
+# ── Posição fixa da Mula (direita da tela) ─────────────────────────────────
 MULA_X = 1550
-MULA_Y = 400   # ajuste conforme o sprite e o floor do level2
+MULA_Y = 400
 
 
 class Mula(Boss):
@@ -29,65 +21,71 @@ class Mula(Boss):
         )
         self.window = window
 
-        # ── Animacoes ────────────────────────────────────────────────
-        self.idle_frames     = self._load("sprites/boss/mula/idle")
-        self.hit_frames      = self._load("sprites/boss/mula/hit")
-        self.death_frames    = self._load("sprites/boss/mula/death")
-        self.attack1_frames  = self._load("sprites/boss/mula/attack/fase_1")
-        self.attack2_frames  = self._load("sprites/boss/mula/attack/fase_2")
+        # ── Animações ────────────────────────────────────────────────────────
+        self.idle_frames = self._load("sprites/boss/mula/idle")
+        self.hit_frames = self._load("sprites/boss/mula/hit")
+        self.death_frames = self._load("sprites/boss/mula/death")
+        self.attack1_frames = self._load("sprites/boss/mula/attack/fase_1")
+        self.attack2_frames = self._load("sprites/boss/mula/attack/fase_2")
 
         self.current_animation = self.idle_frames
-        self.frame             = 0
-        self.anim_timer        = 0.0
-        self.anim_speed        = 0.12
+        self.frame = 0
+        self.anim_timer = 0.0
+        self.anim_speed = 0.12
 
-        # ── Projeteis ────────────────────────────────────────────────
-        self.fireballs       = []   # Fireball (pequenas)
-        self.super_fireballs = []   # SuperFireball (grandes)
+        # ── Projéteis ────────────────────────────────────────────────────────
+        self.fireballs = []
+        self.super_fireballs = []
 
-        # ── Timers de ataque ─────────────────────────────────────────
-        # Fase 1: fireball a cada 2.5s
-        self.fb_timer    = 0.0
-        self.fb_cooldown = 2.5
+        # ── Timers de ataque ─────────────────────────────────────────────────
+        self.fb_timer = 0.0
+        self.fb_cooldown = 2.5   # fase 1
+        self.fb_cooldown_p2 = 1.5   # fase 2
 
-        # Fase 2: fireball a cada 1.5s
-        self.fb_cooldown_p2 = 1.5
+        self.sfb_timer = 0.0
+        self.sfb_cooldown = 6.0
+        self.charging = False
+        self.charge_timer = 0.0
+        self.charge_duration = 1.5
+        self._charge_corridor = None
 
-        # Super fireball: carrega por 1.5s antes de disparar
-        self.sfb_timer        = 0.0
-        self.sfb_cooldown     = 6.0    # intervalo entre super-ataques
-        self.charging         = False  # True durante o carregamento
-        self.charge_timer     = 0.0
-        self.charge_duration  = 1.5    # tempo de "aviso" antes de disparar
-        self._charge_corridor = None   # corredor escolhido
+        # ── Estado ───────────────────────────────────────────────────────────
+        self.state = "idle"
+        self.dead = False
 
-        # ── Estado ───────────────────────────────────────────────────
-        self.state    = "idle"
-        self.dead     = False
-
-        self.hit_timer    = 0.0
+        self.hit_timer = 0.0
         self.hit_duration = 0.3
 
-        # ── Animacao de ataque ────────────────────────────────────────
-        self._attacking       = False
+        self._attacking = False
         self._attack_frame_done = False
 
     # =========================================================
     # HELPERS
     # =========================================================
 
-    def _load(self, path):
-        files = sorted(f for f in listdir(path) if f.endswith(".png"))
-        return [Sprite(f"{path}/{f}") for f in files]
+    def _load(self, path: str):
+        """Carrega frames de animação de uma pasta. Retorna lista com 1 sprite
+        de fallback caso a pasta não exista ou esteja vazia."""
+        try:
+            files = sorted(
+                f for f in listdir(path)
+                if f.endswith(".png") and isfile(f"{path}/{f}")
+            )
+            if not files:
+                raise FileNotFoundError
+            return [Sprite(f"{path}/{f}") for f in files]
+        except (FileNotFoundError, OSError):
+            # Fallback: reutiliza o sprite base
+            return [self.sprite]
 
-    def _is_phase2(self):
+    def _is_phase2(self) -> bool:
         return self.hp <= 50
 
     # =========================================================
-    # ANIMACAO
+    # ANIMAÇÃO
     # =========================================================
 
-    def animate(self, dt):
+    def animate(self, dt: float):
         self.anim_timer += dt
         if self.anim_timer < self.anim_speed:
             return
@@ -95,60 +93,62 @@ class Mula(Boss):
         self.frame += 1
 
         anim = self.current_animation
+
         if self.state == "death":
             if self.frame >= len(anim):
                 self.frame = len(anim) - 1
+            self._apply_frame(anim)
             return
 
-        # detecta fim do ciclo de ataque
         if self._attacking and self.frame >= len(anim):
-            self.frame      = 0
+            self.frame = 0
             self._attacking = False
-            self.state      = "idle"
+            self.state = "idle"
 
         if self.frame >= len(anim):
             self.frame = 0
 
-        old_x, old_y       = self.sprite.x, self.sprite.y
-        self.sprite         = anim[self.frame]
-        self.sprite.x, self.sprite.y = old_x, old_y
+        self._apply_frame(anim)
+
+    def _apply_frame(self, anim):
+        old_x, old_y = self.sprite.x, self.sprite.y
+        self.sprite = anim[self.frame]
+        self.sprite.x = old_x
+        self.sprite.y = old_y
 
     # =========================================================
     # ATAQUES
     # =========================================================
 
     def _shoot_fireball(self, player):
-        """Dispara uma fireball pequena na altura atual do jogador."""
         fb = Fireball(
-            x        = self.sprite.x,
-            player_y = player.sprite.y + player.sprite.height / 2,
-            window   = self.window
+            x=self.sprite.x,
+            player_y=player.sprite.y + player.sprite.height / 2,
+            window=self.window
         )
         self.fireballs.append(fb)
         self._start_attack(phase=1)
 
     def _start_super_charge(self):
-        """Inicia o carregamento da super fireball — escolhe o corredor."""
-        self.charging         = True
-        self.charge_timer     = 0.0
+        self.charging = True
+        self.charge_timer = 0.0
         self._charge_corridor = choice(["chao", "meio", "topo"])
-        self.state            = "charge"
+        self.state = "charge"
         self._start_attack(phase=2)
 
     def _shoot_super_fireball(self):
-        """Dispara a super fireball no corredor escolhido."""
         sfb = SuperFireball(
-            x        = self.sprite.x,
-            corridor = self._charge_corridor,
-            window   = self.window
+            x=self.sprite.x,
+            corridor=self._charge_corridor,
+            window=self.window
         )
         self.super_fireballs.append(sfb)
         self.charging = False
-        self.state    = "idle"
+        self.state = "idle"
 
     def _start_attack(self, phase: int):
         self._attacking = True
-        self.frame      = 0
+        self.frame = 0
         self.anim_timer = 0
         self.current_animation = (
             self.attack1_frames if phase == 1 else self.attack2_frames
@@ -160,35 +160,44 @@ class Mula(Boss):
     # =========================================================
 
     def check_bullets(self, player):
-        """Checa balas do player contra Mula e contra fireballs."""
+        """Checa balas do player contra a Mula e contra fireballs."""
         for bullet in player.bullets[:]:
-            hit_something = False
+            removed = False
 
-            # acertou a Mula
+            # ── Acertou a Mula ───────────────────────────────────────────────
             if self.sprite.collided(bullet.sprite):
                 self.take_damage(1)
                 self.hit_timer = self.hit_duration
                 player.bullets.remove(bullet)
+                removed = True
                 continue
 
-            # acertou uma fireball pequena
+            if removed:
+                continue
+
+            # ── Acertou uma fireball pequena ─────────────────────────────────
+            b_rect = pygame.Rect(
+                int(bullet.sprite.x), int(bullet.sprite.y),
+                int(bullet.sprite.width), int(bullet.sprite.height)
+            )
             for fb in self.fireballs[:]:
-                if not fb.dead and fb.sprite.collided(bullet.sprite):
+                if not fb.dead and fb.rect.colliderect(b_rect):
                     destroyed = fb.take_hit()
-                    player.bullets.remove(bullet)
-                    if destroyed:
+                    if bullet in player.bullets:
+                        player.bullets.remove(bullet)
+                    if destroyed and fb in self.fireballs:
                         self.fireballs.remove(fb)
-                    hit_something = True
+                    removed = True
                     break
 
-    def take_damage(self, damage):
+    def take_damage(self, damage: int):
         if self.dead:
             return
         self.hp -= damage
         self.state = "hit"
         if self.hp <= 0:
-            self.hp    = 0
-            self.dead  = True
+            self.hp = 0
+            self.dead = True
             self.state = "death"
             self.frame = 0
             self.current_animation = self.death_frames
@@ -199,7 +208,7 @@ class Mula(Boss):
     # UPDATE
     # =========================================================
 
-    def update(self, dt, player):
+    def update(self, dt: float, player):
         if self.dead:
             self.current_animation = self.death_frames
             self.animate(dt)
@@ -208,14 +217,14 @@ class Mula(Boss):
         phase2 = self._is_phase2()
         cooldown = self.fb_cooldown_p2 if phase2 else self.fb_cooldown
 
-        # ── Fireball pequena ─────────────────────────────────────────
+        # ── Fireball pequena ─────────────────────────────────────────────────
         if not self.charging:
             self.fb_timer += dt
             if self.fb_timer >= cooldown:
                 self.fb_timer = 0.0
                 self._shoot_fireball(player)
 
-        # ── Super fireball (fase 2) ───────────────────────────────────
+        # ── Super fireball (fase 2) ──────────────────────────────────────────
         if phase2:
             if not self.charging:
                 self.sfb_timer += dt
@@ -223,27 +232,26 @@ class Mula(Boss):
                     self.sfb_timer = 0.0
                     self._start_super_charge()
             else:
-                # carregando: exibe aviso e dispara apos charge_duration
                 self.charge_timer += dt
                 if self.charge_timer >= self.charge_duration:
                     self._shoot_super_fireball()
 
-        # ── Hit ───────────────────────────────────────────────────────
+        # ── Hit ──────────────────────────────────────────────────────────────
         if self.hit_timer > 0:
             self.hit_timer -= dt
             if not self._attacking:
                 self.current_animation = self.hit_frames
-                self.state             = "hit"
+                self.state = "hit"
         elif not self._attacking and not self.charging:
             self.current_animation = self.idle_frames
             if self.state not in ("attack", "charge"):
                 self.state = "idle"
 
-        # ── Update projeteis ─────────────────────────────────────────
+        # ── Update projéteis ─────────────────────────────────────────────────
         for fb in self.fireballs[:]:
             fb.update(dt)
             if fb.collides_with_player(player):
-                player.take_damage(1)
+                player.take_damage(Fireball.DAMAGE)
                 self.fireballs.remove(fb)
             elif fb.is_off_screen() or fb.dead:
                 if fb in self.fireballs:
@@ -252,12 +260,12 @@ class Mula(Boss):
         for sfb in self.super_fireballs[:]:
             sfb.update(dt)
             if sfb.collides_with_player(player):
-                player.take_damage(2)         # 2 coracoes de dano
+                player.take_damage(SuperFireball.DAMAGE)
                 self.super_fireballs.remove(sfb)
             elif sfb.is_off_screen():
                 self.super_fireballs.remove(sfb)
 
-        # ── Balas do player ──────────────────────────────────────────
+        # ── Balas do player ──────────────────────────────────────────────────
         self.check_bullets(player)
 
         self.animate(dt)
@@ -270,7 +278,6 @@ class Mula(Boss):
         self.sprite.draw()
         self.draw_hp_bar()
 
-        # aviso visual do corredor alvo durante o carregamento
         if self.charging and self._charge_corridor:
             self._draw_charge_warning()
 
@@ -280,28 +287,20 @@ class Mula(Boss):
             sfb.draw()
 
     def _draw_charge_warning(self):
-        """Destaca o corredor que sera atacado durante o carregamento."""
-        corridor_label = {
-            "chao": "CHAO",
-            "meio": "MEIO",
-            "topo": "TOPO",
-        }
-        y_map = {
-            "chao": SuperFireball.CORRIDOR_Y["chao"],
-            "meio": SuperFireball.CORRIDOR_Y["meio"],
-            "topo": SuperFireball.CORRIDOR_Y["topo"],
-        }
-        label = corridor_label.get(self._charge_corridor, "")
-        cy    = y_map.get(self._charge_corridor, 500)
+        """Destaca o corredor que será atacado durante o carregamento."""
+        y_map = SuperFireball.CORRIDOR_Y
+        label_map = {"chao": "CHÃO", "meio": "MEIO", "topo": "TOPO"}
 
-        # linha de aviso desenhada com blocos
+        label = label_map.get(self._charge_corridor, "")
+        cy = y_map.get(self._charge_corridor, 500)
+
         surf = pygame.display.get_surface()
         if surf:
             pygame.draw.line(
                 surf,
                 (255, 80, 0),
-                (0,   cy),
-                (self.sprite.x, cy),
+                (0, cy),
+                (int(self.sprite.x), cy),
                 3
             )
 
