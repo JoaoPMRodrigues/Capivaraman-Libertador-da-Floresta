@@ -263,6 +263,9 @@ class Level2:
             WIN_W // 2 - 80, 5,
             size=22, color=(255, 220, 80)
         )
+        # Vida do jogador
+        life = "❤️" * self.player.life + "💔" * (3 - self.player.life)
+        self.window.draw_text(life, 10, 40, size=20, color=(255, 255, 255))
 
     def _draw_fps(self):
 
