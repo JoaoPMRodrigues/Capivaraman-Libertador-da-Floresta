@@ -6,27 +6,24 @@ from lib.level_manager import LevelManager
 # ── Caminhos ──────────────────────────────────────────────────────────────────
 
 _BRIGHT = "sprites/bosses/select/bright"
-_DARK   = "sprites/bosses/select/dark"
+_DARK = "sprites/bosses/select/dark"
 
 _SPRITE_FILES = {
     1: "1_saci.png",
     2: "3_mula.png",
-    3: "4_boto.png",
-    4: "5_corpo_seco.png",
+    3: "5_corpo_seco.png",
 }
 
 _BOSS_NAMES = {
     1: "Saci",
     2: "Mula Sem Cabeca",
-    3: "Boto Cor de Rosa",
-    4: "Corpo Seco",
+    3: "Corpo Seco",
 }
 
 _LEVEL_SUBTITLES = {
     1: "Floresta Primordial",
     2: "Trilha das Brasas",
-    3: "Rio Amazonas",
-    4: "Dominio do Caos",
+    3: "Dominio do Caos",
 }
 
 # ── Layout ────────────────────────────────────────────────────────────────────
@@ -42,10 +39,10 @@ _HOVER_LIFT = 12
 
 # ── Cores de texto ────────────────────────────────────────────────────────────
 
-_COLOR_UNLOCKED  = (255, 220, 60)     # dourado
-_COLOR_HOVER     = (255, 255, 200)    # branco quente
+_COLOR_UNLOCKED = (255, 220, 60)     # dourado
+_COLOR_HOVER = (255, 255, 200)    # branco quente
 _COLOR_COMPLETED = (100, 255, 140)    # verde
-_COLOR_LOCKED    = (80, 80, 80)       # cinza escuro
+_COLOR_LOCKED = (80, 80, 80)       # cinza escuro
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -55,16 +52,16 @@ class _Card:
     def __init__(self, level_num: int, cx: int, cy: int,
                  spr_bright: Sprite, spr_dark: Sprite,
                  unlocked: bool):
-        self.level_num  = level_num
-        self.cx         = cx
-        self.cy         = cy
+        self.level_num = level_num
+        self.cx = cx
+        self.cy = cy
         self.spr_bright = spr_bright
-        self.spr_dark   = spr_dark
-        self.unlocked   = unlocked
-        self._hovered   = False
+        self.spr_dark = spr_dark
+        self.unlocked = unlocked
+        self._hovered = False
 
         # Timer de animação de hover (0.0 → 1.0)
-        self._hover_t   = 0.0
+        self._hover_t = 0.0
 
     # ------------------------------------------------------------------
 
@@ -92,19 +89,19 @@ class _Card:
 
     def update_anim(self, dt: float):
         target = 1.0 if (self._hovered and self.unlocked) else 0.0
-        speed  = 8.0
+        speed = 8.0
         self._hover_t += (target - self._hover_t) * speed * dt
-        self._hover_t  = max(0.0, min(1.0, self._hover_t))
+        self._hover_t = max(0.0, min(1.0, self._hover_t))
 
     # ------------------------------------------------------------------
 
     def draw(self, window, completed: bool, dt: float):
         self.update_anim(dt)
 
-        spr   = self._spr
-        lift  = int(_HOVER_LIFT * self._hover_t)
+        spr = self._spr
+        lift = int(_HOVER_LIFT * self._hover_t)
 
-        draw_x = self.cx - spr.width  // 2
+        draw_x = self.cx - spr.width // 2
         draw_y = self.cy - spr.height // 2 - lift
 
         spr.x = draw_x
@@ -124,23 +121,23 @@ class _Card:
 
         # ── Rótulo do boss ────────────────────────────────────────────
         name = _BOSS_NAMES.get(self.level_num, f"Fase {self.level_num}")
-        sub  = _LEVEL_SUBTITLES.get(self.level_num, "")
+        sub = _LEVEL_SUBTITLES.get(self.level_num, "")
 
         if not self.unlocked:
             name_color = _COLOR_LOCKED
-            sub_color  = _COLOR_LOCKED
+            sub_color = _COLOR_LOCKED
         elif completed:
             name_color = _COLOR_COMPLETED
-            sub_color  = (60, 180, 90)
+            sub_color = (60, 180, 90)
         elif self._hover_t > 0.5:
             name_color = _COLOR_HOVER
-            sub_color  = (200, 200, 200)
+            sub_color = (200, 200, 200)
         else:
             name_color = _COLOR_UNLOCKED
-            sub_color  = (190, 165, 50)
+            sub_color = (190, 165, 50)
 
         label_y = draw_y + spr.height + 18
-        name_x  = self.cx - len(name) * 6
+        name_x = self.cx - len(name) * 6
         window.draw_text(name, name_x, label_y, size=20, color=name_color)
 
         sub_x = self.cx - len(sub) * 4
@@ -166,9 +163,9 @@ class LevelSelect:
 
     def __init__(self, window, level_manager: LevelManager, bg_sprite: Sprite):
         self.window = window
-        self.lm     = level_manager
-        self.bg     = bg_sprite
-        self.dt     = 0.0
+        self.lm = level_manager
+        self.bg = bg_sprite
+        self.dt = 0.0
 
         self._cards: list[_Card] = []
         self._was_pressed = False
@@ -192,7 +189,8 @@ class LevelSelect:
                 try:
                     self._bright[num] = Sprite(f"{_DARK}/{fname}")
                 except Exception:
-                    self._bright[num] = Sprite("sprites/boss/saci/idle_left/saci_idle1.png")
+                    self._bright[num] = Sprite(
+                        "sprites/boss/saci/idle_left/saci_idle1.png")
 
             # dark
             try:
@@ -205,9 +203,9 @@ class LevelSelect:
     # ------------------------------------------------------------------
 
     def _build_cards(self):
-        total  = self.lm.total_levels
-        wnd_w  = self.window.width
-        cols   = total                          
+        total = self.lm.total_levels
+        wnd_w = self.window.width
+        cols = total
 
         total_w = (cols - 1) * _CARD_GAP_X
         start_x = (wnd_w - total_w) // 2
@@ -219,12 +217,12 @@ class LevelSelect:
             num = i + 1
 
             self._cards.append(_Card(
-                level_num  = num,
-                cx         = cx,
-                cy         = cy,
-                spr_bright = self._bright[num],
-                spr_dark   = self._dark[num],
-                unlocked   = self.lm.is_unlocked(num),
+                level_num=num,
+                cx=cx,
+                cy=cy,
+                spr_bright=self._bright[num],
+                spr_dark=self._dark[num],
+                unlocked=self.lm.is_unlocked(num),
             ))
 
     def refresh(self):
@@ -237,7 +235,7 @@ class LevelSelect:
 
     def update(self, mouse: Mouse, dt: float = 0.016):
         self.dt = dt
-        mx, my  = mouse.get_position()
+        mx, my = mouse.get_position()
         pressed = mouse.button_pressed(1)
 
         for card in self._cards:
@@ -265,25 +263,25 @@ class LevelSelect:
     # ------------------------------------------------------------------
 
     def draw(self):
-        w  = self.window
+        w = self.window
         dt = self.dt
 
         self.bg.draw()
 
         # ── Título ───────────────────────────────────────────────────
-        title   = "ESCOLHA SEU DESAFIO"
+        title = "ESCOLHA SEU DESAFIO"
         title_x = w.width // 2 - len(title) * 15
         w.draw_text(title, title_x, 38, size=48, color=(255, 215, 50))
 
         # ── Subtítulo ────────────────────────────────────────────────
-        sub   = "Derrote os bosses para liberar as proximas fases"
+        sub = "Derrote os bosses para liberar as proximas fases"
         sub_x = w.width // 2 - len(sub) * 5
         w.draw_text(sub, sub_x, 100, size=18, color=(180, 155, 70))
 
         # ── Botão Voltar ──────────────────────────────────────────────
-        mx, my       = w.mouse.get_position()
+        mx, my = w.mouse.get_position()
         back_hovered = (10 <= mx <= 200 and 10 <= my <= 60)
-        back_color   = (255, 255, 120) if back_hovered else (170, 170, 170)
+        back_color = (255, 255, 120) if back_hovered else (170, 170, 170)
         w.draw_text("< Voltar", 20, 15, size=28, color=back_color)
 
         # ── Cards ─────────────────────────────────────────────────────
@@ -295,10 +293,10 @@ class LevelSelect:
         for card in self._cards:
             if card.is_hovered():
                 if card.unlocked:
-                    hint       = "Clique para jogar!"
+                    hint = "Clique para jogar!"
                     hint_color = (255, 255, 160)
                 else:
-                    hint       = "Complete a fase anterior para desbloquear"
+                    hint = "Complete a fase anterior para desbloquear"
                     hint_color = (180, 90, 90)
                 hint_x = w.width // 2 - len(hint) * 6
                 w.draw_text(hint, hint_x, w.height - 48,

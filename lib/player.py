@@ -32,7 +32,7 @@ class Player(Entity):
         self.hit_duration = 0.3
 
         self.FLOOR_Y = 550
-
+        self.moving = False
         # pulo fisico
         self.vel_y = 0.0
         self.gravity = 2200.0
@@ -42,7 +42,7 @@ class Player(Entity):
         # quando True, o level externo controla toda a fisica vertical
         self.external_physics = False
         self._drop_through = False
-
+        self.pressed = False
         # tiros
         self.bullets = []
         self.shoot_timer = 0
@@ -228,18 +228,18 @@ class Player(Entity):
             self.animate(dt)
             return
 
-        moving = False
+        self.moving = False
 
         # movimento horizontal
         if keyboard.key_pressed("A") or keyboard.key_pressed("LEFT"):
             self.sprite.x -= self.speed * dt
             self.direction = "left"
-            moving = True
+            self.moving = True
 
         elif keyboard.key_pressed("D") or keyboard.key_pressed("RIGHT"):
             self.sprite.x += self.speed * dt
             self.direction = "right"
-            moving = True
+            self.moving = True
 
             # pulo com SPACE — disparo unico por pressao
         jump_pressed = keyboard.key_pressed("SPACE")
@@ -293,11 +293,11 @@ class Player(Entity):
 
             if self.direction == "right":
                 self.current_animation = (
-                    self.walk_right_frames if moving else self.idle_right_frames
+                    self.walk_right_frames if self.moving else self.idle_right_frames
                 )
             elif self.direction == "left":
                 self.current_animation = (
-                    self.walk_left_frames if moving else self.idle_left_frames
+                    self.walk_left_frames if self.moving else self.idle_left_frames
                 )
             else:
                 self.current_animation = self.idle_right_frames

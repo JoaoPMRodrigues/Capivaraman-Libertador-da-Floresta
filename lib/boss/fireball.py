@@ -89,9 +89,9 @@ class SuperFireball:
     DAMAGE = 3
     # Y do centro de cada corredor — ajuste conforme o layout do level2
     CORRIDOR_Y = {
-        "chao": 000,   # corredor do chao
+        "chao": 200,   # corredor do chao
         "meio": 350,   # corredor das plataformas medias
-        "topo": 700,   # corredor das plataformas grandes
+        "topo": 900,   # corredor das plataformas grandes
     }
 
     def __init__(self, x, corridor: str, window):

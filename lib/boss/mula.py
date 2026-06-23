@@ -121,12 +121,18 @@ class Mula(Boss):
     # =========================================================
 
     def _shoot_fireball(self, player):
-        fb = Fireball(
-            x=self.sprite.x,
-            player_y=player.sprite.y + player.sprite.height / 2,
-            window=self.window
-        )
-        self.fireballs.append(fb)
+
+        centro_y = player.sprite.y + player.sprite.height / 2
+        espacamento = 80
+
+        for offset in (-espacamento, 0, espacamento):
+            fb = Fireball(
+                x=self.sprite.x,
+                player_y=centro_y + offset,
+                window=self.window
+            )
+            self.fireballs.append(fb)
+
         self._start_attack(phase=1)
 
     def _start_super_charge(self):

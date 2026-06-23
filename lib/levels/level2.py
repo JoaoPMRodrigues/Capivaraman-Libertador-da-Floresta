@@ -68,7 +68,7 @@ class Level2:
         # ── Player ───────────────────────────────────────────────────────────
         from lib.player import Player
         self.player = Player(window)
-        self.player.sprite.x = 150
+        self.player.sprite.x = 200
         self.player.sprite.y = FLOOR_Y - self.player.sprite.height  # usa o chão desta fase
 
         # Ativa física externa: player.update() cuida de input, animação e
@@ -110,6 +110,7 @@ class Level2:
     # =========================================================
 
     def update(self, keyboard: Keyboard, dt: float):
+
         if self._result is not None:
             return self._result
 
@@ -128,6 +129,8 @@ class Level2:
         # 5) Win / Lose
         self._check_win_lose(dt)
 
+        if keyboard.key_pressed("ESC"):
+            return "menu"
         return self._result
 
     # =========================================================
@@ -173,18 +176,28 @@ class Level2:
         p = self.player
         prev_y = getattr(p, '_prev_y', p.sprite.y)
         landed = False
-
-        # ── Plataformas one-way ──────────────────────────────────────────────
+        x = p.sprite.x
+        y = p.sprite.y
         for plat in self.platforms:
             if plat.check_landing(p, prev_y):
+                if p.direction == "right":
+                    p.sprite = Sprite(
+                        "sprites/player/idle_right/idle_1.png", 1)
+                else:
+                    p.sprite = Sprite("sprites/player/idle_left/idle_1.png", 1)
+                p.sprite.x = x
                 p.sprite.y = plat.y - p.sprite.height
+                p.animate(1/60)
                 p.vel_y = 0.0
                 p.is_on_ground = True
                 landed = True
-                break  # uma plataforma por frame é suficiente
-
-        # ── Chão da fase ────────────────────────────────────────────────────
+                break
         if p.sprite.y + p.sprite.height >= FLOOR_Y:
+            if p.direction == "right":
+                p.sprite = Sprite("sprites/player/idle_right/idle_1.png", 1)
+            else:
+                p.sprite = Sprite("sprites/player/idle_left/idle_1.png", 1)
+            p.sprite.x = x
             p.sprite.y = FLOOR_Y - p.sprite.height
             p.vel_y = 0.0
             landed = True
@@ -277,33 +290,3 @@ class Level2:
         self.window.draw_text(f"FPS: {self.fps}",
                               10, 10, size=25, color=(255, 255, 255))
         self.cooldown_fps -= self.dt
-
-    def _handle_drop_through(self, kb: Keyboard, dt: float):
-        """
-        Detecta SPACE + DOWN ou SPACE + S para descer da plataforma.
-        Ativa player._drop_through = True por DROP_DURATION segundos.
-        """
-        p = self.player
-
-        # Garante o uso do delta time correto do sistema caso venha zerado/errado
-        actual_dt = self.window.delta_time() if dt > 1 else dt
-
-        if self._drop_timer > 0:
-            self._drop_timer -= actual_dt
-            p._drop_through = True
-        else:
-            p._drop_through = False
-
-        # Verifica novo acionamento
-        space = kb.key_pressed("SPACE")
-        down = kb.key_pressed("DOWN") or kb.key_pressed("S")
-
-        if space and down and p.is_on_ground and self._drop_timer <= 0:
-            self._drop_timer = DROP_DURATION
-            p._drop_through = True
-            p.is_on_ground = False
-
-            # CORREÇÃO CRÍTICA: Zera a força de pulo para impedir o conflito
-            # com o comando SPACE dentro de player.update()
-            p.vel_y = 0.0
-            p.jump_pressed_last = True
