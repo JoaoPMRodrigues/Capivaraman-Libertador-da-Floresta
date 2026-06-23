@@ -10,6 +10,7 @@ from lib.level_placeholder import LevelPlaceholder
 from lib.transition import Transition
 from lib.levels.level1 import *
 from lib.levels.level2 import *
+from lib.levels.level3 import *
 
 # Game
 
@@ -145,8 +146,8 @@ class Game:
             self._level = Level1(self.window)
         elif level_num == 2:
             self._level = Level2(self.window)
-        else:
-            self._level = LevelPlaceholder(self.window, level_num)
+        elif level_num == 3:
+            self._level = Level3(self.window)
 
         self.state = "playing"
 
