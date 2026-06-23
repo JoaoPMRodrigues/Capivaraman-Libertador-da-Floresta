@@ -1,178 +1,184 @@
-# 🦫 CAPIVARAMAN: Libertador da Floresta
+# 🦫 CAPIVARAMAN: O Libertador da Floresta
 
-## 📌 Sobre o projeto
+## 1. High Concept
 
-**CAPIVARAMAN: Libertador da Floresta** é um jogo 2D de ação e aventura inspirado no folclore brasileiro.  
-O jogador controla um herói capivara que precisa salvar a Amazônia de uma corrupção Causada pelo Corpo Seco.
+**CAPIVARAMAN: O Libertador da Floresta** é um jogo 2D no estilo *boss rush* inspirado no folclore brasileiro, onde o jogador controla um super-herói humanoide que precisa salvar a Amazônia de uma corrupção causada pelo Corpo Seco.
 
+O enredo do jogo baseia-se na releitura das lendas brasileiras como inimigos corrompidos que, ao serem derrotados, são purificados e passam a contribuir para a restauração da floresta.
 
-## 👤 Autores
-
-João Paulo Medeiros Rodrigues  
-Eddie Belarmino Salles de Moraes
-
-- Universidade Federal Fluminense (UFF)  
-- Curso: Ciência da Computação
-- Projeto desenvolvido para a disciplina de Laboratório de Jogos (UFF)
+O jogo combina combate em tempo real, progressão por fases e narrativa ambiental.
 
 ---
 
-## 🧠 High Concept
+## 2. Gameplay e Enredo
 
-O diferencial do jogo está na mecânica de **purificação**:
-
-- Inimigos são versões corrompidas de lendas brasileiras  
-- Ao derrotá-los, eles são libertados  
-- O jogador progride restaurando o mundo  
-
-O jogo combina:
-- Combate  
-- Progressão por fases  
-- Narrativa ambiental
-
----
-
-## 🎮 Gameplay (Planejado)
+### 🎮 Gameplay
 
 O jogo segue o loop clássico:
 
-- Entrada do jogador (teclado)  
-- Atualização da cena  
-- Renderização na tela  
+1. Entrada do jogador (teclado);
+2. Atualização da cena (movimento, colisões e IA);
+3. Renderização na tela.
 
-### Mecânicas principais:
+### Mecânicas Principais
 
-- Visão Top-down  
-- Combate contra inimigos  
-- Progressão por fases  
-- Libertação de personagens  
+* Combate contra chefes;
+* Sistema de progressão por fases;
+* Libertação de entidades corrompidas.
 
-> ⚠️ Ainda não implementado
+### Sistema de Progressão
+
+Cada chefe derrotado:
+
+* Liberta uma entidade do folclore;
+* Desbloqueia novas áreas.
+
+### 📖 Enredo
+
+CAPIVARAMAN, um herói improvável, estava viajando pela Amazônia quando percebe algo estranho: a floresta está cinza, sem vida, como se tivesse sido drenada.
+
+Investigando a origem do problema, ele descobre que o responsável é o **Corpo Seco**, uma entidade sombria do folclore brasileiro que está corrompendo a natureza.
+
+Para expandir seu poder, o Corpo Seco:
+
+* Possuiu diversas entidades do folclore;
+* Transformou-as em versões corrompidas;
+* Espalhou a destruição pela floresta.
+
+Agora, CAPIVARAMAN precisa:
+
+* Derrotar as entidades corrompidas;
+* Restaurar o equilíbrio da floresta.
+
+### Progressão Narrativa
+
+1. Descoberta da floresta corrompida;
+2. Contextualização do conflito;
+3. Primeiro confronto;
+4. Libertação das primeiras entidades;
+5. Escalada do conflito;
+6. Batalha final contra o Corpo Seco;
+7. Restauração do equilíbrio da floresta.
 
 ---
 
-## 🧠 Enredo
+## 🗺️ Level Design
 
-A Amazônia está **cinza e sem vida**.
+### Fase 1 – Território do Saci
 
-O responsável é o **Corpo Seco**, que corrompeu a natureza e as lendas.
+* Primeiro chefe;
+* Inimigo rápido e caótico;
+* Introdução a obstáculos dinâmicos.
 
-O jogador deve:
+### Fase 2 – Região da Mula-sem-Cabeça
 
-- Derrotar inimigos  
-- Libertar as entidades  
-- Restaurar a floresta 
+* Ambiente mais hostil;
+* Ataques mais fortes;
+* Maior dificuldade.
 
----
+### Fase Final – Núcleo da Corrupção
 
-## 🗺️ Fases (Planejamento)
-
-1. Floresta Cinza (tutorial)  
-2. Saci  
-3. Curupira  
-4. Mula-sem-cabeça  
-5. Boto  
-6. Corpo Seco  
-
-> ⚠️ Fases ainda não implementadas
+* Confronto contra o Corpo Seco;
+* Encerramento do jogo;
+* Libertação da floresta.
 
 ---
 
 ## 👤 Personagens
 
 ### 🦫 CAPIVARAMAN
-- Protagonista;  
-- Evolui ao longo do jogo  
 
-### 💀 Corpo Seco
-- Antagonista principal  
+* Protagonista;
+* Herói da floresta.
+
+### 👹 Corpo Seco
+
+* Antagonista principal;
+* Entidade do folclore brasileiro;
+* Responsável pela possessão das outras entidades.
 
 ### 🌀 Chefes
-- Saci  
-- Curupira  
-- Mula-sem-cabeça  
-- Boto  
+
+#### Saci
+
+* Entidade corrompida;
+* Alta mobilidade.
+
+#### Mula-sem-Cabeça
+
+* Entidade corrompida;
+* Ataques flamejantes.
+
+#### Corpo Seco
+
+* Chefe final;
+* Origem da corrupção.
 
 ---
 
-## 🎨 Arte (Planejada)
+## 3. Interface de Usuário
 
-- Pixel Art 2D  
-- Mundo corrompido → tons de cinza  
-- Mundo restaurado → cores vivas  
+### Elementos Principais
 
----
+* Barra de vida do jogador;
+* Indicador de progresso.
 
-## 🔊 Áudio (Planejado)
+### Feedback Visual
 
-- Sons da natureza  
-- Efeitos de combate  
-- Contraste entre ambiente vivo e corrompido  
+* Mudança de cor (cinza → colorido);
+* Animações de ataque;
+* Efeitos visuais de corrupção.
 
----
+### Menu
 
-## 🧱 Arquitetura
-
-O jogo será baseado no conceito de **GameObject**:
-
-- Player  
-- Inimigos  
-- Objetos do cenário  
-
-### Estrutura prevista:
-
+* Iniciar;
+* Opções;
+* Sair.
 
 ---
 
-## 🔁 Loop do jogo
+## 4. Áudio e Música
 
-1. Entrada  
-2. Atualização  
-3. Renderização  
+### Trilha Sonora
 
----
+* Tema florestal;
+* Instrumentos naturais;
+* Evolução de ambiente calmo para ambiente tenso.
 
-## 🧪 Tecnologias
+### Efeitos Sonoros
 
-- Python  
-- Pygame  
-- PPlay
-
----
-
-## ▶️ Como executar
-
-```bash
-git clone <url>
-cd projeto
-python main.py
-```
+* Ataques;
+* Sons da floresta;
+* Efeitos de corrupção.
 
 ---
 
-## 🔁 Loop do jogo
+## 5. Arte Conceito e Referências
 
-1. Entrada  
-2. Atualização  
-3. Renderização  
+### Estilo Visual
+
+* Pixel Art 2D;
+* Forte contraste entre:
+
+  * Mundo corrompido;
+  * Mundo restaurado.
+
+### Referências
+
+* Jogos indie 2D;
+* Cultura e folclore brasileiro;
+* Estética ambiental.
 
 ---
 
-## 🧪 Tecnologias
+## 6. Ideias Adicionais e Observações
 
-- Python  
-- Pygame  
-- PPlay  
+* Sistema de transformação visual dos personagens;
+* Possível expansão com novas lendas brasileiras.
 
 ---
 
-## ▶️ Como executar
+## 7. Criadores do Jogo
 
-```bash
-git clone <url>
-cd projeto
-python main.py
-```
-
-
-
+* João Paulo Medeiros Rodrigues
+* Eddie Belarmino Salles de Moraes
