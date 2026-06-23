@@ -19,7 +19,7 @@ class Fireball:
         self.sprite.x = x
         self.sprite.y = player_y - self.sprite.height / 2
 
-        self.speed = 800
+        self.speed = 500
         self.hp = self.HP_MAX
         self.dead = False
 
