@@ -9,7 +9,7 @@ from lib.boss.fireball import Fireball, SuperFireball
 
 # ── Posição fixa da Mula (direita da tela) ─────────────────────────────────
 MULA_X = 1550
-MULA_Y = 400
+MULA_Y = 535
 
 
 class Mula(Boss):

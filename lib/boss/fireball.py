@@ -128,7 +128,27 @@ class SuperFireball:
             self.sprite.x, self.sprite.y = old_x, old_y
 
     def collides_with_player(self, player) -> bool:
-        return self.sprite.collided(player.sprite)
+        margin_x = 30
+        margin_y = 30
+
+        fb_left = self.sprite.x + margin_x
+        fb_right = self.sprite.x + self.sprite.width - margin_x
+
+        fb_top = self.sprite.y + margin_y
+        fb_bottom = self.sprite.y + self.sprite.height - margin_y
+
+        pl_left = player.sprite.x
+        pl_right = player.sprite.x + player.sprite.width
+
+        pl_top = player.sprite.y
+        pl_bottom = player.sprite.y + player.sprite.height
+
+        return (
+        pl_right > fb_left
+        and pl_left < fb_right
+        and pl_bottom > fb_top
+        and pl_top < fb_bottom
+        )
 
     def is_off_screen(self):
         return self.sprite.x < -300
