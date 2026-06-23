@@ -138,7 +138,7 @@ class CorpoSeco(Boss):
         offset_vertical = 64  # Distância de empilhamento vertical entre as caveiras
 
         # ── FASE 2: Vida menor ou igual a 50 ──────────────────────────────────
-        if self.hp <= 50:
+        if self.hp <= 70:
             # Escolhe exatamente 2 chaves/pontos diferentes da lista ["chao", "meio", "topo"]
             corredores_escolhidos = random.sample(["chao", "meio", "topo"], 2)
 

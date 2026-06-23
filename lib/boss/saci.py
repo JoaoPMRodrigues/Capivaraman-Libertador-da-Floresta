@@ -234,7 +234,7 @@ class Saci(Boss):
         self.attack_timer += dt
 
         # dash com cooldown (fase 2: hp <= 50)
-        if self.hp <= 65 and not self.dashing:
+        if self.hp <= 80 and not self.dashing:
             self.dash_timer += dt
             if self.dash_timer >= self.dash_cooldown:
                 # adiciona um pouco de aleatoriedade ao timing

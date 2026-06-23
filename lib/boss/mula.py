@@ -79,7 +79,7 @@ class Mula(Boss):
             return [self.sprite]
 
     def _is_phase2(self) -> bool:
-        return self.hp <= 50
+        return self.hp <= 75
 
     # =========================================================
     # ANIMAÇÃO
