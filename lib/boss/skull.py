@@ -17,11 +17,11 @@ class Skull:
         self.frames = self._load_frames(path)
 
         if self.frames:
-            self.sprite = Sprite(
-                f"{path}/" + sorted(f for f in listdir(path) if f.endswith(".png"))[0])
+            self.sprite = self.frames[0]
         else:
-
-            self.sprite = Sprite("sprites/boss/corpo-seco/idle/idle1.png")
+            self.sprite = Sprite(
+                "sprites/boss/corpo-seco/idle/idle1.png"
+            )
             self.frames = [self.sprite]
 
         self.sprite.x = x
@@ -53,7 +53,8 @@ class Skull:
 
         # Atualização dos frames
         self.animation_timer += dt
-        if self.animation_timer >= self.animation_speed:
+
+        if len(self.frames) > 1 and self.animation_timer >= self.animation_speed:
             self.animation_timer = 0
             self.frame = (self.frame + 1) % len(self.frames)
 
