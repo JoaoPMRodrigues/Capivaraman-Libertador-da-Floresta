@@ -21,9 +21,9 @@ class CorpoSeco(Boss):
         self.window = window
 
         # ── Animações ────────────────────────────────────────────────────────
-        self.idle_frames = self._load("sprites/boss/corpo-seco/idle")
-        self.hit_frames = self._load("sprites/boss/corpo-seco/hit")
-        self.death_frames = self._load("sprites/boss/corpo-seco/death")
+        self.idle_frames = self._load_frames("sprites/boss/corpo-seco/idle")
+        self.hit_frames = self._load_frames("sprites/boss/corpo-seco/hit")
+        self.death_frames = self._load_frames("sprites/boss/corpo-seco/death")
 
         self.current_animation = self.idle_frames
         self.frame = 0
@@ -48,18 +48,6 @@ class CorpoSeco(Boss):
             "meio": 430,   # corredor das plataformas medias
             "topo": 800,   # corredor das plataformas grandes
         }
-
-    def _load(self, path: str):
-        try:
-            files = sorted(
-                f for f in listdir(path)
-                if f.endswith(".png") and isfile(f"{path}/{f}")
-            )
-            if not files:
-                raise FileNotFoundError
-            return [Sprite(f"{path}/{f}") for f in files]
-        except (FileNotFoundError, OSError):
-            return [self.sprite]
 
     def animate(self, dt: float):
         self.anim_timer += dt

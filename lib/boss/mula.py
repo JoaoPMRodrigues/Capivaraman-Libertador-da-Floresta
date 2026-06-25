@@ -22,11 +22,13 @@ class Mula(Boss):
         self.window = window
 
         # ── Animações ────────────────────────────────────────────────────────
-        self.idle_frames = self._load("sprites/boss/mula/idle")
-        self.hit_frames = self._load("sprites/boss/mula/hit")
-        self.death_frames = self._load("sprites/boss/mula/death")
-        self.attack1_frames = self._load("sprites/boss/mula/attack/fase_1")
-        self.attack2_frames = self._load("sprites/boss/mula/attack/fase_2")
+        self.idle_frames = self._load_frames("sprites/boss/mula/idle")
+        self.hit_frames = self._load_frames("sprites/boss/mula/hit")
+        self.death_frames = self._load_frames("sprites/boss/mula/death")
+        self.attack1_frames = self._load_frames(
+            "sprites/boss/mula/attack/fase_1")
+        self.attack2_frames = self._load_frames(
+            "sprites/boss/mula/attack/fase_2")
 
         self.current_animation = self.idle_frames
         self.frame = 0
@@ -62,21 +64,6 @@ class Mula(Boss):
     # =========================================================
     # HELPERS
     # =========================================================
-
-    def _load(self, path: str):
-        """Carrega frames de animação de uma pasta. Retorna lista com 1 sprite
-        de fallback caso a pasta não exista ou esteja vazia."""
-        try:
-            files = sorted(
-                f for f in listdir(path)
-                if f.endswith(".png") and isfile(f"{path}/{f}")
-            )
-            if not files:
-                raise FileNotFoundError
-            return [Sprite(f"{path}/{f}") for f in files]
-        except (FileNotFoundError, OSError):
-            # Fallback: reutiliza o sprite base
-            return [self.sprite]
 
     def _is_phase2(self) -> bool:
         return self.hp <= 75

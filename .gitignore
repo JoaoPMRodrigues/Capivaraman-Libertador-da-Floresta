@@ -8,7 +8,7 @@ __pycache__/
 # Remove pasta de testes
 sandbox/
 
-#Remove metatados do windows
+# Remove metatados do windows
 *Zone.Identifier*
 *:Zone.Identifier
 *.png:Zone.Identifier
@@ -17,5 +17,10 @@ sandbox/
 save_data.json
 *.json
 
-#Remove pasta pplay 
+# Remove pasta pplay 
 pplay/
+
+# Remove executáveis
+build/
+dist/
+*.spec

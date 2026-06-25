@@ -1,5 +1,7 @@
 from pplay.sprite import *
-from abc import ABC, abstractmethod
+from abc import ABC
+from lib.utils import resource_path
+from os import listdir
 
 
 class Entity(ABC):
@@ -18,3 +20,11 @@ class Entity(ABC):
 
     def update(self):
         pass
+
+    def _load_frames(self, path):
+        real_path = resource_path(path)
+        try:
+            files = sorted(f for f in listdir(real_path) if f.endswith(".png"))
+            return [Sprite(f"{path}/{f}") for f in files]
+        except FileNotFoundError:
+            return []

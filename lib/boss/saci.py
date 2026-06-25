@@ -2,7 +2,7 @@ from lib.boss.boss import *
 from pplay.sprite import *
 from random import randint
 from os import listdir
-
+from lib.utils import resource_path
 from lib.boss.tornado import *
 
 FLOOR_Y = 375
@@ -63,10 +63,6 @@ class Saci(Boss):
     # =========================================================
     # HELPERS
     # =========================================================
-
-    def _load_frames(self, path):
-        files = sorted(f for f in listdir(path) if f.endswith(".png"))
-        return [Sprite(f"{path}/{f}") for f in files]
 
     def _fix_positions(self):
         h = self.sprite.height

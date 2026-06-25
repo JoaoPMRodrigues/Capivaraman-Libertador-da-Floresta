@@ -1,4 +1,6 @@
 from lib.entity import *
+from lib.utils import resource_path
+from os import listdir
 
 
 class Boss(Entity):

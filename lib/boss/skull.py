@@ -1,6 +1,7 @@
 import pygame
 from os import listdir
 from pplay.sprite import Sprite
+from lib.utils import resource_path
 
 
 class Skull:
@@ -35,8 +36,10 @@ class Skull:
         self.animation_speed = 0.08
 
     def _load_frames(self, path):
+        real_path = resource_path(path)
+
         try:
-            files = sorted(f for f in listdir(path) if f.endswith(".png"))
+            files = sorted(f for f in listdir(real_path) if f.endswith(".png"))
             return [Sprite(f"{path}/{f}") for f in files]
         except FileNotFoundError:
             return []

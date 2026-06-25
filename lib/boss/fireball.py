@@ -1,6 +1,7 @@
 import pygame
 from pplay.sprite import Sprite
 from os import listdir
+from lib.utils import resource_path
 
 
 class Fireball:
@@ -28,9 +29,12 @@ class Fireball:
         self._anim_speed = 0.08
 
     def _load_frames(self, path):
-        files = sorted(f for f in listdir(path) if f.endswith(".png"))
-        self.frames = [Sprite(f"{path}/{f}") for f in files]
-        self.sprite = self.frames[0]
+        real_path = resource_path(path)
+        try:
+            files = sorted(f for f in listdir(real_path) if f.endswith(".png"))
+            return [Sprite(f"{path}/{f}") for f in files]
+        except FileNotFoundError:
+            return []
 
     def update(self, dt):
         if self.dead:
@@ -111,9 +115,12 @@ class SuperFireball:
         self._anim_speed = 0.1
 
     def _load_frames(self, path):
-        files = sorted(f for f in listdir(path) if f.endswith(".png"))
-        self.frames = [Sprite(f"{path}/{f}") for f in files]
-        self.sprite = self.frames[0]
+        real_path = resource_path(path)
+        try:
+            files = sorted(f for f in listdir(real_path) if f.endswith(".png"))
+            return [Sprite(f"{path}/{f}") for f in files]
+        except FileNotFoundError:
+            return []
 
     def update(self, dt):
         if self.dead:
@@ -144,10 +151,10 @@ class SuperFireball:
         pl_bottom = player.sprite.y + player.sprite.height
 
         return (
-        pl_right > fb_left
-        and pl_left < fb_right
-        and pl_bottom > fb_top
-        and pl_top < fb_bottom
+            pl_right > fb_left
+            and pl_left < fb_right
+            and pl_bottom > fb_top
+            and pl_top < fb_bottom
         )
 
     def is_off_screen(self):
